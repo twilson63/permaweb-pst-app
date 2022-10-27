@@ -17,8 +17,8 @@ const URL = 'https://d1o5nlqr4okus2.cloudfront.net/gateway/contracts/deploy'
 //const of = Promise.resolve
 const slugify = compose(toLower, join('-'), split(' '))
 
-export async function deploy(name, description, addr, contentType, data, topics = "") {
-  return Promise.resolve({ name, description, addr, contentType, data, topics })
+export async function deploy(name, description, addr, contentType, data, topics = "", forkTX) {
+  return Promise.resolve({ name, description, addr, contentType, data, topics, forkTX })
     // upload to arweave
     .then(upload)
     // dispatch to bundlr
@@ -27,8 +27,8 @@ export async function deploy(name, description, addr, contentType, data, topics 
     .then(post)
 }
 
-export async function deployBundlr(name, description, addr, contentType, assetId, topics = "") {
-  return Promise.resolve({ name, description, addr, contentType, assetId, topics })
+export async function deployBundlr(name, description, addr, contentType, assetId, topics = "", forkTX) {
+  return Promise.resolve({ name, description, addr, contentType, assetId, topics, forkTX })
     .then(dispatch)
     .then(post)
 }
@@ -88,6 +88,7 @@ async function createAndTag(ctx) {
     foreignCalls: [],
     settings: [["isTradeable", true]]
   }))
+  tx.addTag('Forked', ctx.forkTX)
   tx.addTag('Title', ctx.name)
   tx.addTag('Description', ctx.description)
   const assetType = ctx.contentType.split('/')[0] || 'image'

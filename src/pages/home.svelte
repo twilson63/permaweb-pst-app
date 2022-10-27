@@ -33,6 +33,7 @@
   let confirmDlg = false;
   let tx = "";
   let currency = "";
+  let forkTX = "";
 
   function showError(msg) {
     errorMessage = msg;
@@ -96,7 +97,8 @@
           addr,
           files[0].type,
           result.data.id,
-          topics
+          topics,
+          forkTX
         );
 
         deployDlg = false;
@@ -241,7 +243,8 @@
           addr,
           files[0].type,
           result.data.id,
-          topics
+          topics,
+          forkTX
         );
 
         deployDlg = false;
@@ -285,7 +288,8 @@
           addr,
           files[0].type,
           data,
-          topics
+          topics,
+          forkTX
         );
 
         deployDlg = false;
@@ -409,6 +413,14 @@
               <label class="label text-sm text-gray-400"
                 >(when using $AR you also mint $BAR)</label
               >
+            </div>
+            <div class="form-control">
+              <label for="fork" class="label">Fork (optional)</label>
+              <input
+                type="text"
+                class="input input-bordered"
+                bind:value={forkTX}
+              />
             </div>
             <div class="my-16 space-y-4">
               <button disabled={notValid} class="btn btn-block">Deploy</button>
