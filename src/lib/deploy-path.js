@@ -88,7 +88,7 @@ async function createAndTag(ctx) {
     foreignCalls: [],
     settings: [["isTradeable", true]]
   }))
-  tx.addTag('Forked', ctx.forkTX)
+  tx.addTag('Forks', ctx.forkTX)
   tx.addTag('Title', ctx.name)
   tx.addTag('Description', ctx.description)
   const assetType = ctx.contentType.split('/')[0] || 'image'

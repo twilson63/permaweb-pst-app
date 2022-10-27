@@ -415,7 +415,7 @@
               >
             </div>
             <div class="form-control">
-              <label for="fork" class="label">Fork (optional)</label>
+              <label for="fork" class="label">Forks (optional)</label>
               <input
                 type="text"
                 class="input input-bordered"
