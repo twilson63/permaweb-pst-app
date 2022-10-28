@@ -104,7 +104,7 @@
   <header class="my-16">
     <h1 class="text-3xl">History</h1>
   </header>
-  <section>
+  <section class="flex flex-col items-center max-w-screen">
     {#await images then images}
       {#each images as img}
         <div class="md:hidden flex flex-col space-y-4 p-4 mb-4 shadow-xl">
