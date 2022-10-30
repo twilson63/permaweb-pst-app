@@ -96,6 +96,7 @@
   }
 
   function tweetLink(title, id) {
+    console.log("title", title);
     return `https://twitter.com/intent/tweet?text=${encodeURI(
       "🪧 STAMP\n\n" + title.replace("#", "no ") + "\n\n🐘"
     )}&url=https://pst.arweave.dev/%23/show/${id}`;
@@ -242,6 +243,10 @@
       </div>
     </section>
   </main>
+{:catch e}
+  <div class="alert alert-error">
+    <h2 class="text-3xl">{e.message}</h2>
+  </div>
 {/await}
 <Construction
   open={constructionDlg}

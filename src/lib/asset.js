@@ -37,6 +37,7 @@ query {
     //.then(x => (console.log(x), x))
     .then(compose(
       take(count),
+      filter(n => n.title),
       map(node => {
         return {
           id: prop('id', node),
@@ -46,6 +47,7 @@ query {
       filter(node =>
         prop('value', find(propEq('name', 'Uploader'), node.tags)) !== 'RedStone'
       ),
+
       pluck('node')
     ))
 
@@ -261,6 +263,7 @@ export async function getAssetData(id) {
       owner: data.transaction.owner.address,
       timestamp: data.transaction?.block?.timestamp || Date.now() / 1000
     }))
+    .then(x => (console.log('data', x), x))
   //.then(_ => ({ title: 'Test', description: 'Description' }))
 }
 
