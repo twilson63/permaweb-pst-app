@@ -331,14 +331,29 @@
         <div class="flex flex-col md:flex-row md:space-x-16 justify-center">
           <div>
             {#if files[0]}
-              <iframe
-                class="border-2 border-secondary w-full md:w-[500px] md:h-[350px]"
-                src={URL.createObjectURL(files[0])}
-              />
-              <div class="mt-2 flex justify-end">
-                <button on:click={() => (files = [])} class="link">clear</button
+              {#if files[0].type.split("/")[0] === "video"}
+                <video
+                  controls
+                  class="border-2 border-secondary w-full md:w-[500px] md:h-[350px]"
                 >
-              </div>
+                  <source src={URL.createObjectURL(files[0])} />
+                </video>
+                <div class="mt-2 flex justify-end">
+                  <button on:click={() => (files = [])} class="link">
+                    clear
+                  </button>
+                </div>
+              {:else}
+                <iframe
+                  class="border-2 border-secondary w-full md:w-[500px] md:h-[350px]"
+                  src={URL.createObjectURL(files[0])}
+                />
+                <div class="mt-2 flex justify-end">
+                  <button on:click={() => (files = [])} class="link">
+                    clear
+                  </button>
+                </div>
+              {/if}
             {:else}
               <div class="form-control">
                 <label

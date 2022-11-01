@@ -6,13 +6,14 @@ const arweave = Arweave.init({
 })
 
 const BAR = __BAR_CONTRACT__
+const SRC = __ASSET_SOURCE__
 
 /*
  * Need to upload to arweave using post
  * Then create a path manifest to upload to
  * both sequencer and bundlr
  */
-const SRC = 'BzNLxND_nJEMfcLWShyhU4i9BnzEWaATo6FYFsfsO0Q'
+//const SRC = 'BzNLxND_nJEMfcLWShyhU4i9BnzEWaATo6FYFsfsO0Q'
 const URL = 'https://d1o5nlqr4okus2.cloudfront.net/gateway/contracts/deploy'
 //const of = Promise.resolve
 const slugify = compose(toLower, join('-'), split(' '))
