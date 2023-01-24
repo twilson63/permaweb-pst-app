@@ -1,4 +1,6 @@
 <script>
+  import fileReaderStream from "https://esm.sh/filereader-stream";
+  import { split, map, trim } from "ramda";
   import { providers } from "ethers";
   import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
   import * as nearAPI from "near-api-js";
@@ -10,10 +12,14 @@
   import ConfirmDialog from "../dialogs/confirm.svelte";
   import Navbar from "../components/navbar.svelte";
 
+  const { WarpFactory } = window.warp;
+  const warp = WarpFactory.forMainnet();
+
   //import { WebBundlr } from "@bundlr-network/client";
   const WebBundlr = Bundlr.default;
 
   const { connect, keyStores, WalletConnection } = nearAPI;
+  const SRC = __ASSET_SOURCE__;
   const BAR = __BAR_CONTRACT__;
   const NEAR_OPTS = {
     networkId: "mainnet",
@@ -63,7 +69,7 @@
         await provider._ready();
 
         const bundlr = new WebBundlr(
-          "https://node1.bundlr.network",
+          "https://node2.bundlr.network",
           "matic",
           provider
         );
@@ -78,39 +84,59 @@
           await bundlr.fund(price.minus(balance).multipliedBy(1.1).toFixed(0));
         }
 
-        const trx = await bundlr.createTransaction(
-          await toArrayBuffer(files[0]),
-          {
-            tags: [{ name: "Content-Type", value: files[0].type }],
-          }
-        );
-
-        await trx.sign();
-
-        const result = await trx.upload();
-
+        let assetType = files[0].type.split("/")[0] || "image";
+        if (assetType === "application") {
+          assetType = files[0].type.split("/")[1];
+        }
+        const topicData = map(trim, split(",", topics)).map((t) => ({
+          name: "Topic:" + t,
+          value: t,
+        }));
         const addr = await arweaveWallet.getActiveAddress();
 
-        const result2 = await deployBundlr(
-          title,
-          description,
-          addr,
-          files[0].type,
-          result.data.id,
-          topics,
-          forkTX
-        );
+        const _tags = [
+          { name: "Content-Type", value: files[0].type },
+          { name: "App-Name", value: "SmartWeaveContract" },
+          { name: "App-Version", value: "0.3.0" },
+          { name: "Contract-Src", value: SRC },
+          {
+            name: "Init-State",
+            value: JSON.stringify({
+              pairs: [],
+              ticker: "PST",
+              balances: {
+                [addr]: addr,
+              },
+              emergencyHaltWallet: addr,
+              contentType: files[0].type,
+              settings: [["isTradeable", true]],
+            }),
+          },
+          { name: "Forks", value: forkTX },
+          { name: "Title", value: title },
+          { name: "Description", value: description },
+          { name: "Type", value: assetType },
+          ...topicData,
+        ];
+        console.log(_tags);
+
+        const dataStream = fileReaderStream(files[0]);
+        const result = await bundlr.upload(dataStream, {
+          tags: _tags,
+        });
+
+        await warp.register(result.id, "node2");
 
         deployDlg = false;
 
         // reset form
         document.forms[0].reset();
 
-        tx = result2.id;
+        tx = result.id;
 
         $imgCache = [
           ...$imgCache,
-          { id: result2.id, src: URL.createObjectURL(files[0]) },
+          { id: result.id, src: URL.createObjectURL(files[0]) },
         ];
 
         confirmDlg = true;
@@ -216,47 +242,56 @@
           await bundlr.fund(price.minus(balance).multipliedBy(1.1).toFixed(0));
         }
 
-        const trx = await bundlr.createTransaction(
-          await toArrayBuffer(files[0]),
-          {
-            tags: [
-              { name: "Content-Type", value: files[0].type },
-              { name: "Protocol-Name", value: "BAR" },
-              { name: "Action", value: "Burn" },
-              { name: "App-Name", value: "SmartWeaveAction" },
-              { name: "App-Version", value: "0.3.0" },
-              { name: "Input", value: JSON.stringify({ function: "mint" }) },
-              { name: "Contract", value: BAR },
-            ],
-          }
-        );
-
-        await trx.sign();
-
-        const result = await trx.upload();
-
+        let assetType = files[0].type.split("/")[0] || "image";
+        if (assetType === "application") {
+          assetType = files[0].type.split("/")[1];
+        }
+        const topicData = map(trim, split(",", topics)).map((t) => ({
+          name: "Topic:" + t,
+          value: t,
+        }));
         const addr = await arweaveWallet.getActiveAddress();
 
-        const result2 = await deployBundlr(
-          title,
-          description,
-          addr,
-          files[0].type,
-          result.data.id,
-          topics,
-          forkTX
-        );
+        const _tags = [
+          { name: "Content-Type", value: files[0].type },
+          { name: "App-Name", value: "SmartWeaveContract" },
+          { name: "App-Version", value: "0.3.0" },
+          { name: "Contract-Src", value: SRC },
+          {
+            name: "Init-State",
+            value: JSON.stringify({
+              pairs: [],
+              ticker: "PST",
+              balances: {
+                [addr]: addr,
+              },
+              emergencyHaltWallet: addr,
+              contentType: files[0].type,
+              settings: [["isTradeable", true]],
+            }),
+          },
+          { name: "Forks", value: forkTX },
+          { name: "Title", value: title },
+          { name: "Description", value: description },
+          { name: "Type", value: assetType },
+          ...topicData,
+        ];
+
+        const dataStream = fileReaderStream(files[0]);
+        const result = await bundlr.upload(dataStream, {
+          tags: _tags,
+        });
+
+        await warp.register(result.id, "node1");
 
         deployDlg = false;
 
         // reset form
         document.forms[0].reset();
 
-        tx = result2.id;
-
         $imgCache = [
           ...$imgCache,
-          { id: result2.id, src: URL.createObjectURL(files[0]) },
+          { id: result.id, src: URL.createObjectURL(files[0]) },
         ];
 
         confirmDlg = true;
