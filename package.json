@@ -8,7 +8,7 @@
     "build": "vite build",
     "build:contract": "node build.js",
     "preview": "vite preview",
-    "deploy": "node deploy.mjs",
+    "deploy": "yarn build && node deploy.mjs",
     "gen_wallet": "node scripts/wallet.js"
   },
   "devDependencies": {
