@@ -1,12 +1,19 @@
 import { compose, toLower, join, split, map, trim } from 'ramda'
+//import { WarpFactory, defaultCacheOptions } from 'warp-contracts'
+
+const { WarpFactory } = window.warp
+
 const arweave = Arweave.init({
   host: 'arweave.net',
   port: 443,
   protocol: 'https'
 })
 
+const DRE_NODE = 'https://dre-1.warp.cc'
 const BAR = __BAR_CONTRACT__
 const SRC = __ASSET_SOURCE__
+
+const warp = WarpFactory.forMainnet()
 
 /*
  * Need to upload to arweave using post
@@ -35,18 +42,7 @@ export async function deployBundlr(name, description, addr, contentType, assetId
 }
 
 async function post(ctx) {
-  const tx = await createAndTag(ctx)
-  await arweave.transactions.sign(tx)
-  tx.id = ctx.atomicId
-  const result = await fetch(URL, {
-    method: 'POST',
-    body: JSON.stringify({ contractTx: tx }),
-    headers: {
-      'Accept-Encoding': 'gzip, deflate, br',
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    }
-  })
+  const result = await warp.register(ctx.atomicId, 'node2')
   return { id: ctx.atomicId }
 }
 

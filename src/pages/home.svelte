@@ -14,7 +14,7 @@
   const WebBundlr = Bundlr.default;
 
   const { connect, keyStores, WalletConnection } = nearAPI;
-  const BAR = "mMffEC07TyoAFAI_O6q_nskj2bT8n4UFvckQ3yELeic";
+  const BAR = __BAR_CONTRACT__;
   const NEAR_OPTS = {
     networkId: "mainnet",
     keyStore: new keyStores.BrowserLocalStorageKeyStore(),
