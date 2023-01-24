@@ -105,7 +105,7 @@
               pairs: [],
               ticker: "PST",
               balances: {
-                [addr]: addr,
+                [addr]: 1 * 1e6,
               },
               emergencyHaltWallet: addr,
               contentType: files[0].type,
@@ -263,7 +263,7 @@
               pairs: [],
               ticker: "PST",
               balances: {
-                [addr]: addr,
+                [addr]: 1 * 1e6,
               },
               emergencyHaltWallet: addr,
               contentType: files[0].type,

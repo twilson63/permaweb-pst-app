@@ -2,6 +2,12 @@ import { take, compose, prop, propEq, find, map, pluck, path, reduce, values, fi
 import { WarpFactory } from 'warp-contracts/web'
 import Account from 'arweave-account'
 
+const arweave = Arweave.init({
+  host: 'arweave.net',
+  port: 443,
+  protocol: 'https'
+})
+
 const account = new Account({
   cacheIsActivated: true,
   cacheSize: 100,
@@ -58,7 +64,9 @@ export async function assetDetails(asset, addr) {
   //   .then(res => res.ok ? res.json() : Promise.reject(new Error('could not find asset state!')))
   const state = await warp.contract(asset).setEvaluationOptions({ internalWrites: true, allowBigInt: true }).readState()
     .then(path(['cachedValue', 'state']))
-  //console.log(state)
+  if (asset === 'YyHY6_A7RyoVoKreIjld6DsbwvURhfBh0KFRNvlAgT0') {
+    console.log('STATE: ', state)
+  }
   try {
     const balances = state.balances
     const totalBalance = reduce((a, b) => a + b, 0, values(balances))
@@ -209,6 +217,21 @@ query {
     .then(x => (console.log('exclude', x), x))
 }
 
+export function pstsByOwner(addr) {
+  return fetch(
+    `https://contracts.warp.cc/balances?walletAddress=${addr}`
+  )
+    .then((res) => res.json())
+    .then((result) => pluck("contract_tx_id", result.balances))
+    .then(buildQuery)
+    .then((gql) => arweave.api.post("graphql", gql)) // .then((res) => res.json()))
+    .then(prop('data'))
+    .then(({ data: { transactions: edges } }) => edges.edges)
+    .then(pluck("node"))
+    .then((x) => (console.log(x), x))
+    .then(map(transformTx));
+}
+
 export async function imagesByOwner(addr) {
   return fetch('https://arweave.net/graphql', {
     method: 'POST',
@@ -313,4 +336,31 @@ function txToAssetInfo(node) {
     title: getTag('Title') || 'Unknown',
     timestamp: node?.block?.timestamp || Date.now() / 1000
   })
+}
+
+function buildQuery(ids) {
+  return {
+    query: `query($ids: [ID!]!) {
+        transactions(first: 100, ids: $ids, tags: {name: "Type", values: ["image", "pdf", "video"]}) {
+          edges {
+            node {
+              id
+              tags {
+                name
+                value
+              }
+              owner {
+                address
+              }
+              block {
+                timestamp
+              }
+            }
+          }
+        }
+    }`,
+    variables: {
+      ids,
+    },
+  };
 }

@@ -6,6 +6,7 @@
     excludeTransferred,
     includeTransferred,
     assetDetails,
+    pstsByOwner,
   } from "../lib/asset.js";
   import { getCount } from "../lib/stamp.js";
   import Transfer from "../dialogs/transfer.svelte";
@@ -86,21 +87,7 @@
   }
 
   async function getImages(addr) {
-    fetch(`https://contracts.warp.cc/balances?walletAddress=${addr}`)
-      .then((res) => res.json())
-      .then((r) => console.log(r));
-
-    const transferredImages = await excludeTransferred(addr);
-    return (
-      // Promise.all([imagesByOwner(addr), includeTransferred(addr)])
-      //   .then((results) => concat(results[0], results[1]))
-      //   .then(reject((a) => transferredImages[a.id] === 100))
-      //   // sort!
-      //   .then(sortWith([descend(prop("timestamp"))]))
-      []
-    );
-
-    // use aggregate node
+    return await pstsByOwner(addr);
   }
 
   let images = getImages(addr);
