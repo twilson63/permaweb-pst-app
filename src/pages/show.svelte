@@ -33,7 +33,7 @@
       imageMsg =
         "Currently displaying cache, when deploying directly to arweave, it can take up to 30 minutes to show on chain...";
     } else {
-      src = `https://arweave.net/${encodeURI(id)}/asset`;
+      src = `https://arweave.net/${encodeURI(id)}`;
       //src = await loadImage(`https://arweave.net/${encodeURI(id)}/asset`);
       //console.log(src);
     }

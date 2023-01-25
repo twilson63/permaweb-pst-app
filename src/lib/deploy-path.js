@@ -26,13 +26,47 @@ const URL = 'https://d1o5nlqr4okus2.cloudfront.net/gateway/contracts/deploy'
 const slugify = compose(toLower, join('-'), split(' '))
 
 export async function deploy(name, description, addr, contentType, data, topics = "", forkTX) {
-  return Promise.resolve({ name, description, addr, contentType, data, topics, forkTX })
-    // upload to arweave
-    .then(upload)
-    // dispatch to bundlr
-    .then(dispatch)
-    // post to warp
-    .then(post)
+  const tx = await arweave.createTransaction({ data })
+  tx.addTag('App-Name', 'SmartWeaveContract')
+  tx.addTag('App-Version', '0.3.0')
+  tx.addTag('Content-Type', contentType)
+
+  tx.addTag('Contract-Src', SRC)
+  tx.addTag('Init-State', JSON.stringify({
+    creator: addr,
+    ticker: "PST-ASSET",
+    balances: {
+      [addr]: 10000
+    },
+    contentType: contentType,
+    emergencyHaltWallet: addr,
+    pairs: [],
+    settings: [["isTradeable", true]]
+  }))
+  tx.addTag('Forks', forkTX)
+  tx.addTag('Creator', addr)
+  tx.addTag('Title', name)
+  tx.addTag('Description', description)
+  let assetType = contentType.split('/')[0] || 'image'
+  if (assetType === 'application') {
+    assetType = contentType.split('/')[1]
+  }
+  tx.addTag('Type', assetType)
+
+  map(trim, split(',', topics)).forEach(t => {
+    tx.addTag('Topic:' + t, t)
+  })
+
+  await arweave.transactions.sign(tx)
+  const result = await arweave.transactions.post(tx)
+
+  if (result.status === 400) {
+    throw new Error('Not enough $AR in wallet to upload pst!')
+  } else if (result.status === 200) {
+    return { assetId: tx.id }
+  }
+  throw new Error(result.message + ' while trying to upload!')
+
 }
 
 export async function deployBundlr(name, description, addr, contentType, assetId, topics = "", forkTX) {

@@ -102,6 +102,7 @@
           {
             name: "Init-State",
             value: JSON.stringify({
+              creator: addr,
               pairs: [],
               ticker: "PST",
               balances: {
@@ -113,6 +114,7 @@
             }),
           },
           { name: "Forks", value: forkTX },
+          { name: "Creator", value: addr },
           { name: "Title", value: title },
           { name: "Description", value: description },
           { name: "Type", value: assetType },
@@ -260,6 +262,7 @@
           {
             name: "Init-State",
             value: JSON.stringify({
+              creator: addr,
               pairs: [],
               ticker: "PST",
               balances: {
@@ -271,6 +274,7 @@
             }),
           },
           { name: "Forks", value: forkTX },
+          { name: "Creator", value: addr },
           { name: "Title", value: title },
           { name: "Description", value: description },
           { name: "Type", value: assetType },
@@ -378,9 +382,19 @@
                     clear
                   </button>
                 </div>
+              {:else if files[0].type.split("/")[0] === "image"}
+                <img
+                  class="border-2 border-secondary w-full md:w-[500px] md:h-[350px] object-contain"
+                  src={URL.createObjectURL(files[0])}
+                />
+                <div class="mt-2 flex justify-end">
+                  <button on:click={() => (files = [])} class="link"
+                    >clear</button
+                  >
+                </div>
               {:else}
                 <iframe
-                  class="border-2 border-secondary w-full md:w-[500px] md:h-[350px]"
+                  class="border-2 border-secondary w-full md:w-[500px] md:h-[350px] object-contain"
                   src={URL.createObjectURL(files[0])}
                 />
                 <div class="mt-2 flex justify-end">
