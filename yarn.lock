@@ -828,6 +828,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@permaweb/stampjs@https://js_stamps.g8way.io":
+  version "0.0.1"
+  resolved "https://js_stamps.g8way.io#d840603d57193f592439b86f70db4e816527802a"
+
 "@randlabs/communication-bridge@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@randlabs/communication-bridge/-/communication-bridge-1.0.0.tgz#9b1c0f440cf88ede8d58eb2ce641982ecb32bea9"
