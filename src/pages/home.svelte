@@ -32,6 +32,7 @@
   let tx = "";
   let currency = "";
   let forkTX = "";
+  let audioRenderer = false;
 
   function showError(msg) {
     errorMessage = msg;
@@ -45,6 +46,7 @@
       title,
       description,
       topics,
+      audioRenderer,
     };
     if (currency === "matic") {
       if (!window.ethereum) {
@@ -302,7 +304,19 @@
                 bind:value={forkTX}
               />
             </div>
-            <div class="my-16 space-y-4">
+            {#if files[0] && files[0].type && files[0].type.split("/")[0] === "audio"}
+              <div class="form-control">
+                <label class="label">
+                  <input
+                    type="checkbox"
+                    class="checkbox"
+                    bind:value={audioRenderer}
+                  />
+                  Include Audio Renderer
+                </label>
+              </div>
+            {/if}
+            <div class="my-8 space-y-4">
               <button disabled={notValid} class="btn btn-block">Deploy</button>
             </div>
           </div>

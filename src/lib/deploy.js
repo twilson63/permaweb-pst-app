@@ -1,5 +1,5 @@
 import fileReaderStream from "https://esm.sh/filereader-stream";
-import { split, map, trim } from "ramda";
+import { split, map, trim, append } from "ramda";
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -39,7 +39,7 @@ export async function deploy(bundlr, asset) {
 
   const addr = await window.arweaveWallet.getActiveAddress();
 
-  const _tags = [
+  let _tags = [
     { name: "Content-Type", value: asset.file.type },
     { name: "App-Name", value: "SmartWeaveContract" },
     { name: "App-Version", value: "0.3.0" },
@@ -65,7 +65,9 @@ export async function deploy(bundlr, asset) {
     { name: "Type", value: assetType },
     ...topicData,
   ];
-
+  if (asset.audioRenderer) {
+    _tags = append({ name: 'Render-With', value: '8uK0yqp0BQ2pc8Q8OTZKNdNnQM1FVpFR3TpnNYdZl1A' }, _tags)
+  }
   const dataStream = fileReaderStream(asset.file);
   const result = await bundlr.upload(dataStream, {
     tags: _tags,
@@ -109,6 +111,10 @@ export async function deployAr(asset) {
   map(trim, split(',', asset.topics)).forEach(t => {
     tx.addTag('Topic:' + t, t)
   })
+
+  if (asset.audioRenderer) {
+    tx.addTag('Render-With', '8uK0yqp0BQ2pc8Q8OTZKNdNnQM1FVpFR3TpnNYdZl1A')
+  }
 
   await arweave.transactions.sign(tx)
   const result = await arweave.transactions.post(tx)
