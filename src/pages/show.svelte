@@ -7,7 +7,18 @@
   import ErrorDialog from "../dialogs/error.svelte";
   import ConnectModal from "../dialogs/connect.svelte";
   import WalletHelp from "../dialogs/wallet-help.svelte";
-  import { take, takeLast } from "ramda";
+  import {
+    compose,
+    take,
+    takeLast,
+    split,
+    join,
+    equals,
+    always,
+    identity,
+    cond,
+    T,
+  } from "ramda";
   import { format } from "date-fns";
 
   import { onMount } from "svelte";
@@ -98,6 +109,20 @@
     }
   }
 
+  function getHost() {
+    return compose(
+      cond([
+        [equals("gitpod.io"), always("arweave.net")],
+        [equals("arweave.dev"), always("arweave.net")],
+        [equals("localhost"), always("arweave.net")],
+        [T, identity],
+      ]),
+      join("."),
+      takeLast(2),
+      split(".")
+    )(location.hostname);
+  }
+
   let assetCount = getCount(id);
   let assetData = getAssetData(id);
 </script>
@@ -116,7 +141,12 @@
         class="hero-content w-[350px] md:w-full p-0 m-0 flex-col md:flex-row md:space-x-4"
       >
         <div class="md:w-1/2 px-0 mx-0 grid place-items-center">
-          {#if asset.type === "image"}
+          {#if asset.renderWith}
+            <iframe
+              src={`https://${getHost()}/${asset.renderWith}/?tx=${id}`}
+              class="h-[400px] w-full md:w-[660px] object-contain"
+            />
+          {:else if asset.type === "image"}
             <img
               class="h-[400px] w-full md:w-[500px] object-contain"
               {src}
@@ -129,6 +159,11 @@
             >
               <source {src} />
             </video>
+          {:else if asset.type === "audio"}
+            <iframe
+              src={`https://${getHost()}/8uK0yqp0BQ2pc8Q8OTZKNdNnQM1FVpFR3TpnNYdZl1A/?tx=${id}`}
+              class="h-[400px] w-full md:w-[660px] object-contain"
+            />
           {:else}
             <iframe
               {src}

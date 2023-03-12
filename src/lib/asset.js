@@ -287,6 +287,7 @@ export async function getAssetData(id) {
       type: prop('value', find(propEq('name', 'Type'), data.transaction.tags)),
       topics: pluck('value', filter(t => t.name.includes('Topic:'), data.transaction.tags)),
       owner: prop('value', find(propEq('name', 'Creator'), data.transaction.tags)) || data.transaction.owner.address,
+      renderWith: prop('value', find(propEq('name', 'Render-With'), data.transaction.tags)) || null,
       timestamp: data.transaction?.block?.timestamp || Date.now() / 1000
     }))
     .then(x => (console.log('data', x), x))
