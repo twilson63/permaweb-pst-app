@@ -63,10 +63,11 @@ export async function deploy(bundlr, asset) {
     { name: "Title", value: asset.title },
     { name: "Description", value: asset.description },
     { name: "Type", value: assetType },
+    { name: "Thumbnail", value: asset.thumbnail },
     ...topicData,
   ];
   if (asset.audioRenderer) {
-    _tags = append({ name: 'Render-With', value: '8uK0yqp0BQ2pc8Q8OTZKNdNnQM1FVpFR3TpnNYdZl1A' }, _tags)
+    _tags = append({ name: 'Render-With', value: 'f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc' }, _tags)
   }
   const dataStream = fileReaderStream(asset.file);
   const result = await bundlr.upload(dataStream, {
@@ -102,6 +103,7 @@ export async function deployAr(asset) {
   tx.addTag('Creator', addr)
   tx.addTag('Title', asset.title)
   tx.addTag('Description', asset.description)
+  tx.addTag('Thumbnail', asset.thumbnail)
   let assetType = asset.file.type.split('/')[0] || 'image'
   if (assetType === 'application') {
     assetType = asset.file.type.split('/')[1]
@@ -113,7 +115,7 @@ export async function deployAr(asset) {
   })
 
   if (asset.audioRenderer) {
-    tx.addTag('Render-With', '8uK0yqp0BQ2pc8Q8OTZKNdNnQM1FVpFR3TpnNYdZl1A')
+    tx.addTag('Render-With', 'f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc')
   }
 
   await arweave.transactions.sign(tx)
