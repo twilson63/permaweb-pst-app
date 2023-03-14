@@ -33,6 +33,7 @@
   let currency = "";
   let forkTX = "";
   let audioRenderer = false;
+  let thumbnail = "";
 
   function showError(msg) {
     errorMessage = msg;
@@ -47,6 +48,7 @@
       description,
       topics,
       audioRenderer,
+      thumbnail,
     };
     if (currency === "matic") {
       if (!window.ethereum) {
@@ -267,6 +269,15 @@
                 id="desc"
                 class="textarea textarea-bordered"
                 bind:value={description}
+              />
+            </div>
+            <div class="form-control">
+              <label for="thumbnail" class="label">Thumbnail (TX_ID)</label>
+              <input
+                type="text"
+                id="thumbnail"
+                class="textarea textarea-bordered"
+                bind:value={thumbnail}
               />
             </div>
             <div class="form-control">

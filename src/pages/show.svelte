@@ -161,7 +161,7 @@
             </video>
           {:else if asset.type === "audio"}
             <iframe
-              src={`https://${getHost()}/8uK0yqp0BQ2pc8Q8OTZKNdNnQM1FVpFR3TpnNYdZl1A/?tx=${id}`}
+              src={`https://${getHost()}/f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc/?tx=${id}`}
               class="h-[400px] w-full md:w-[660px] object-contain"
             />
           {:else}
