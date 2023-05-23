@@ -1,6 +1,6 @@
 <script>
   import { router } from "tinro";
-  import { listAssets } from "../lib/asset.js";
+  //import { listAssets } from "../lib/asset.js";
 
   import ConnectModal from "../dialogs/connect.svelte";
   import WalletHelp from "../dialogs/wallet-help.svelte";
@@ -22,7 +22,7 @@
         >
         <a href="/about" class="btn btn-outline">Learn More</a>
       </div>
-      {#await listAssets(9) then imgs}
+      <!-- {#await listAssets(9) then imgs}
         <div class="w-full grid gap-4 grid-cols-3 grid-flow-row">
           {#each imgs as img}
             <div>
@@ -37,7 +37,7 @@
             </div>
           {/each}
         </div>
-      {/await}
+      {/await} -->
     </div>
   </section>
 </main>

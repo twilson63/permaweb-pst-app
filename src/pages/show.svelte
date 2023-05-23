@@ -23,7 +23,7 @@
 
   import { onMount } from "svelte";
   import { imgCache, profile } from "../store.js";
-  import { stamp, getCount, getRewards } from "../lib/stamp.js";
+  import { stamp, getCount } from "../lib/stamp.js";
   import { getProfile } from "../lib/account.js";
 
   export let id;
@@ -245,7 +245,7 @@
                   {/await}
                 </div>
               </div>
-              <div>
+              <!-- <div>
                 <div class="flex flex-col">
                   <div class="uppercase">Rewards</div>
                   <div class="flex space-x-4">
@@ -255,7 +255,7 @@
                     {/await}
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="md:hidden">
               Link: <a class="link" href="https://arweave.net/{id}"
