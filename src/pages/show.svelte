@@ -7,6 +7,8 @@
   import ErrorDialog from "../dialogs/error.svelte";
   import ConnectModal from "../dialogs/connect.svelte";
   import WalletHelp from "../dialogs/wallet-help.svelte";
+  import Sell from "../dialogs/sell.svelte";
+  import Buy from "../dialogs/buy.svelte";
   import {
     compose,
     take,
@@ -35,7 +37,10 @@
   let showConnect = false;
   let showHelp = false;
   let tryingToStamp = false;
+  let showBuy = false;
+  let showSell = false;
 
+  let address = "";
   onMount(async () => {
     const i = $imgCache.find((img) => img.id === id);
 
@@ -47,6 +52,10 @@
       src = `https://arweave.net/${encodeURI(id)}`;
       //src = await loadImage(`https://arweave.net/${encodeURI(id)}/asset`);
       //console.log(src);
+    }
+
+    if (window.arweaveWallet) {
+      address = await window.arweaveWallet.getActiveAddress();
     }
   });
 
@@ -97,7 +106,6 @@
   }
 
   function tweetLink(title, id) {
-    console.log("title", title);
     return `https://twitter.com/intent/tweet?text=${encodeURI(
       "🪧 STAMP\n\n" + title.replace("#", "no ") + "\n\n🐘"
     )}&url=https://pst.arweave.dev/%23/show/${id}`;
@@ -245,6 +253,22 @@
                   {/await}
                 </div>
               </div>
+              <!-- if owner, then trade, if not owner, buy -->
+              <div>
+                <div class="flex flex-col">
+                  {#if asset.owner === address}
+                    <button
+                      class="btn btn-outline btn-sm rounded-none"
+                      on:click={() => (showSell = true)}>Trade</button
+                    >
+                  {:else}
+                    <button
+                      class="btn btn-outline btn-sm rounded-none"
+                      on:click={() => (showBuy = true)}>Buy</button
+                    >
+                  {/if}
+                </div>
+              </div>
               <!-- <div>
                 <div class="flex flex-col">
                   <div class="uppercase">Rewards</div>
@@ -288,3 +312,5 @@
   on:help={() => (showHelp = true)}
 />
 <WalletHelp bind:open={showHelp} />
+<Buy bind:open={showBuy} data={{ owned: 100, units: 100 }} />
+<Sell bind:open={showSell} />
