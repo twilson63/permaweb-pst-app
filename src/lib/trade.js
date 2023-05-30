@@ -5,7 +5,6 @@ export function getTradeData(env, contract) {
   const readState = fromPromise(env.readState)
   return of(contract)
     .chain(readState)
-    .map(x => (console.log(x), x))
     .map(path(['cachedValue', 'state', 'balances']))
 
 }
@@ -28,7 +27,7 @@ export function getTradeData(env, contract) {
 // }
 
 export function sell(env, contract, percent, price) {
-  const getAddress = fromPromise(env.address)
+  const getAddress = fromPromise(env.getAddress)
   const viewState = fromPromise(env.viewState)
   const write = fromPromise(env.write)
 

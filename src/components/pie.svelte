@@ -21,8 +21,8 @@
   function draw() {
     const slices = [
       { percent: owned / 100, color: "#F1F1F1" },
-      { percent: available / 100, color: "#7189FF" },
-      { percent: notAvailable / 100, color: "#44444F" },
+      { percent: available / 100, color: "#4BBEB7" },
+      { percent: notAvailable / 100, color: "#5DC5BE" },
       { percent: p / 100, color: "#85F473" },
     ];
     let cumulativePercent = 0;

@@ -1,5 +1,6 @@
 <script>
   import { getHost } from "../lib/utils.js";
+  import { format, fromUnixTime } from "date-fns";
   export let asset;
 </script>
 
@@ -11,7 +12,7 @@
     />
   {:else if asset.type === "image"}
     <img
-      class="h-[200px] w-full  object-contain"
+      class="h-[200px] w-full object-contain"
       src={asset.src}
       alt={asset.title}
     />
@@ -48,7 +49,7 @@
         </svg>
       </div>
       <div class="flex flex-col text-sm">
-        <span>Current Owners</span><span>12</span>
+        <span>Current Owners</span><span>{asset.sponsors}</span>
       </div>
     </div>
     <div class="flex items-center space-x-2">
@@ -68,7 +69,7 @@
       </div>
       <div class="flex flex-col text-sm">
         <span>Date Created</span>
-        <span>June 21, 2023</span>
+        <span>{format(fromUnixTime(asset.timestamp), "MMMM d, yyyy")}</span>
       </div>
     </div>
   </div>
