@@ -6,6 +6,8 @@
   export let cancel = true;
   export let bgColor = "";
   export let border = "";
+  export let width = "";
+  export let maxWidth = "";
 
   const dispatch = createEventDispatcher();
 
@@ -16,7 +18,7 @@
 
 <input type="checkbox" {id} bind:checked={open} class="modal-toggle" />
 <div class="modal">
-  <div class="modal-box  {bgColor} {border}">
+  <div class="modal-box  {bgColor} {border} {width} {maxWidth}">
     {#if cancel}
       <button
         on:click={cancelClick}

@@ -3,7 +3,7 @@
   import { split, map, trim } from "ramda";
   import { providers } from "ethers";
   import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-
+  import { WarpFactory } from "warp-contracts";
   import { imgCache } from "../store.js";
   import { deploy, deployAr } from "../lib/deploy.js";
   //import { deploy, deployBundlr } from "../lib/deploy-path.js";
@@ -12,7 +12,6 @@
   import ConfirmDialog from "../dialogs/confirm.svelte";
   import Navbar from "../components/navbar.svelte";
 
-  const { WarpFactory } = window.warp;
   const warp = WarpFactory.forMainnet();
 
   //import { WebBundlr } from "@bundlr-network/client";

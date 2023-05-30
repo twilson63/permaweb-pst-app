@@ -20,10 +20,10 @@
   }
   function draw() {
     const slices = [
-      { percent: owned / 100, color: "#169260" },
+      { percent: owned / 100, color: "#F1F1F1" },
       { percent: available / 100, color: "#7189FF" },
       { percent: notAvailable / 100, color: "#44444F" },
-      { percent: p / 100, color: "#FF974A" },
+      { percent: p / 100, color: "#85F473" },
     ];
     let cumulativePercent = 0;
     slices.forEach((slice) => {

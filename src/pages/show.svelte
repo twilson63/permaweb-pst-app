@@ -1,6 +1,8 @@
 <script>
   import Navbar from "../components/navbar.svelte";
   import { getAssetData } from "../lib/asset.js";
+  import { getTradeData } from "../lib/trade.js";
+  import { readState } from "../services/warp.js";
   import { atomicToStamp } from "../lib/utils.js";
   import Construction from "../dialogs/construction.svelte";
   import Stamping from "../dialogs/stamping.svelte";
@@ -20,6 +22,8 @@
     identity,
     cond,
     T,
+    reduce,
+    toPairs,
   } from "ramda";
   import { format } from "date-fns";
 
@@ -133,6 +137,33 @@
 
   let assetCount = getCount(id);
   let assetData = getAssetData(id);
+  let tradeData = {};
+
+  async function getData(id) {
+    const sumBalance = compose(
+      reduce((acc, [k, v]) => acc + v, 0),
+      toPairs
+    );
+
+    assetData = await getAssetData(id);
+
+    // get trade info and append to assetData
+    tradeData = await getTradeData({ readState }, id)
+      .map((balances) => {
+        const units = sumBalance(balances);
+        return {
+          totalBar: 0,
+          percent: 100,
+          units,
+          owned: balances[address] || 0,
+          canPurchase: balances[id] || 0,
+        };
+      })
+      .toPromise();
+    assetData = { id, src, ...assetData, ...tradeData };
+    console.log({ assetData });
+    return assetData;
+  }
 </script>
 
 <svelte:head>
@@ -142,7 +173,7 @@
 </svelte:head>
 
 <Navbar on:connect={() => (showConnect = true)} />
-{#await getAssetData(id) then asset}
+{#await getData(id) then asset}
   <main>
     <section class="hero min-h-screen bg-base-100">
       <div
@@ -294,6 +325,7 @@
       </div>
     </section>
   </main>
+  <Sell bind:open={showSell} bind:data={assetData} />
 {:catch e}
   <div class="alert alert-error">
     <h2 class="text-3xl">{e.message}</h2>
@@ -313,4 +345,3 @@
 />
 <WalletHelp bind:open={showHelp} />
 <Buy bind:open={showBuy} data={{ owned: 100, units: 100 }} />
-<Sell bind:open={showSell} />

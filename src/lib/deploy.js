@@ -1,5 +1,7 @@
 import fileReaderStream from "https://esm.sh/filereader-stream";
 import { split, map, trim, append } from "ramda";
+import { WarpFactory } from 'warp-contracts'
+import { DeployPlugin } from 'warp-contracts-plugin-deploy'
 
 const arweave = Arweave.init({
   host: 'arweave.net',
@@ -9,8 +11,7 @@ const arweave = Arweave.init({
 
 const SRC = __ASSET_SOURCE__
 
-const { WarpFactory } = window.warp;
-const warp = WarpFactory.forMainnet();
+const warp = WarpFactory.forMainnet().use(new DeployPlugin());
 
 const toArrayBuffer = (file) =>
   new Promise((resolve, reject) => {
