@@ -73,6 +73,5 @@
       </div>
     </div>
   </div>
-  <p class="w-full text-xs mt-8 mb-2"><em>Click to sell asset.</em></p>
-  <button class="btn btn-outline btn-block">Sell Asset</button>
+  <slot />
 </div>

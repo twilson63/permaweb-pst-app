@@ -9,7 +9,6 @@ const DRE = 'https://dre-1.warp.cc'
 
 export async function getProfile(addr) {
   const res = await account.get(addr);
-  console.log(res)
   return res
 }
 

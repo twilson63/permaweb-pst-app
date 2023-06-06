@@ -1,18 +1,15 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Modal from "../components/modal.svelte";
-  import Pie from "../components/pie.svelte";
+  import Pie from "../components/pie-sell.svelte";
   import Asset from "../components/asset.svelte";
 
   export let open;
 
   export let data = {
     title: "Asset Title",
-    percent: 0,
-    totalBar: 0,
-    units: 100,
-    owned: 10,
-    canPurchase: 70,
+    items: [],
+    price: 0,
   };
 
   const dispatch = createEventDispatcher();
@@ -25,8 +22,8 @@
     open = false;
   }
 
-  $: data.qty = data.units * (data.percent / 100);
-  $: data.price = Number(data.bar) / data.qty;
+  // $: data.qty = data.units * (data.percent / 100);
+  // $: data.price = Number(data.bar) / data.qty;
 </script>
 
 <Modal {open} ok={false} width="w-11/12" maxWidth="max-w-5xl">
@@ -36,16 +33,14 @@
   >
   <form on:submit|preventDefault={handleSubmit}>
     <div class="flex space-x-8 flex-col md:flex-row space-y-8">
-      <Asset asset={data} />
+      <Asset asset={data}>
+        <p class="w-full text-xs mt-8 mb-2"><em>Click to sell asset.</em></p>
+        <button class="btn btn-outline btn-block">Sell Asset</button>
+      </Asset>
       <div class="flex md:w-1/2 flex-col">
         <div class="flex justify-center">
           <div class="w-[250px]">
-            <Pie
-              bind:purchase={data.percent}
-              available={(data.canPurchase / data.units) * 100}
-              notAvailable={((data.units - data.owned) / data.units) * 100}
-              owned={(data.owned / data.units) * 100 - data.percent}
-            />
+            <Pie items={data.items} user={data.user} />
           </div>
         </div>
         <div class="mt-4">
@@ -61,7 +56,7 @@
           />
         </div>
         <div class="flex space-x-4 justify-center">
-          <div class="form-control">
+          <div class="form-control w-[150px]">
             <input
               class="input input-bordered rounded-none text-center"
               bind:value={data.percent}
@@ -84,8 +79,8 @@
           <div class="form-control">
             <div class="relative">
               <input
-                class="input input-bordered rounded-none text-center"
-                bind:value={data.bar}
+                class="input input-bordered rounded-none text-center w-[150px]"
+                bind:value={data.u}
                 required
               />
               <div

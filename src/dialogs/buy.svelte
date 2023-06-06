@@ -1,7 +1,8 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Modal from "../components/modal.svelte";
-  import Pie from "../components/pie.svelte";
+  import Pie from "../components/pie-buy.svelte";
+  import Asset from "../components/asset.svelte";
 
   export let open;
 
@@ -12,6 +13,7 @@
   };
 
   export let buyQty = 0;
+  let percent = 0;
 
   const dispatch = createEventDispatcher();
 
@@ -19,9 +21,15 @@
     let purchase = Math.floor(Number(buyQty) / Number(data.price));
     let remaining =
       Number(data.units) - Math.floor(Number(buyQty) / Number(data.price));
-    let percent = Math.floor((purchase / remaining) * 100);
+    percent = Math.floor((purchase / remaining) * 100);
+    console.log("buyQty", {
+      buyQty,
+      percent,
+      remaining,
+      price: data.price,
+    });
 
-    data.percent = percent;
+    //data.percent = percent;
   }
 
   function handleSubmit() {
@@ -32,28 +40,38 @@
   }
 </script>
 
-<Modal {open} ok={false}>
+<Modal {open} ok={false} width="w-11/12" maxWidth="max-w-5xl">
   <button
     on:click={() => (open = false)}
     class="btn btn-sm btn-circle absolute right-2 top-2">✕</button
   >
-  <h1 class="mb-16 text-3xl font-bold">
-    Purchase Asset: <br /><span class="text-3xl font-normal">{data.name}</span>
-  </h1>
-  <div class="flex space-x-8">
-    <div class="w-[350px]">
-      <Pie
-        bind:purchase={data.percent}
-        available={(data.canPurchase / data.units) * 100 - data.percent}
-        notAvailable={((data.units - data.canPurchase - data.owned) /
-          data.units) *
-          100}
-        owned={(data.owned / data.units) * 100}
-      />
-    </div>
-    <div>
-      <form class="form" on:submit|preventDefault={handleSubmit}>
-        <div class="form-control w-2/3">
+
+  <div class="flex space-x-8 flex-col md:flex-row space-y-8">
+    <Asset asset={data}>
+      <p class="w-full text-xs mt-8 mb-2"><em>Click to buy asset.</em></p>
+      <button class="btn btn-outline btn-block">Buy Asset</button>
+    </Asset>
+    <div class="flex md:w-1/2 flex-col">
+      <div class="flex justify-center">
+        <div class="w-[250px]">
+          <Pie items={data.items} />
+        </div>
+      </div>
+
+      <!-- <div class="mt-4">
+        <div class="my-2 text-center text-xs">
+          <em>Slide for % of Atomic Asset to <u>sell</u></em>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          bind:value={percent}
+          class="range range-secondary range-xs"
+        />
+      </div> -->
+      <div class="flex">
+        <div class="form-control w-1/3">
           <label class="label" for="spend">I will spend...</label>
           <div class="relative">
             <input
@@ -62,132 +80,35 @@
               class="input input-bordered w-full"
               bind:value={buyQty}
             />
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
-            >
-              <!-- Heroicon name: mini/exclamation-circle -->
-              <span class="font-bold"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="29"
-                  height="29"
-                  viewBox="0 0 29 29"
-                  fill="none"
-                  class="injected-svg"
-                  data-src="https://g8way.io/PoXn1g11wClhSe6xWymDLjNcjYhe5XjNu0n2TqPdY-U/assets/rebar-logo-2851c9d8.svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  role="img"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M14.5 26.912C21.355 26.912 26.912 21.355 26.912 14.5C26.912 7.64504 21.355 2.088 14.5 2.088C7.64504 2.088 2.088 7.64504 2.088 14.5C2.088 21.355 7.64504 26.912 14.5 26.912ZM14.5 29C22.5081 29 29 22.5081 29 14.5C29 6.49187 22.5081 0 14.5 0C6.49187 0 0 6.49187 0 14.5C0 22.5081 6.49187 29 14.5 29Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M9.11382 10.8852L11.2102 12.1512L13.5891 11.4329L11.5311 10.1901L9.11382 10.8852Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M15.9681 10.7146L14.0214 9.80576L11.5311 10.1901L13.5891 11.4329L15.9681 10.7146Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M9.02042 12.8124L6.88489 11.5262V13.4572L9.02042 12.8124Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M8.833 14.6227L10.3884 15.5533L12.4573 14.8824L10.9487 13.9738L8.833 14.6227Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M15.2109 16.5408L14.0214 15.8244L11.9655 16.4969L13.1786 17.2227L15.2109 16.5408Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M15.1772 18.4184L17.1714 19.6115L19.2299 18.9614L17.1772 17.7251L15.1772 18.4184Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M15.2109 16.5408L13.1786 17.2227L15.1772 18.4184L17.1772 17.7251L15.2109 16.5408Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M12.4573 14.8824L10.3884 15.5533L11.9655 16.4969L14.0214 15.8244L12.4573 14.8824Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M9.02042 12.8124L6.88489 13.4572L8.833 14.6227L10.9487 13.9738L9.02042 12.8124Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M14.5884 14.1912L12.4573 14.8824L14.0214 15.8244L16.1434 15.1303L14.5884 14.1912Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M15.9681 10.7146L13.5891 11.4329L15.49 12.5808L17.8564 11.8549L15.9681 10.7146Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M19.2316 12.6854L17.8564 11.8549L15.49 12.5808L16.91 13.4383L19.2316 12.6854Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M16.91 13.4383L14.5884 14.1912L16.1434 15.1303L18.458 14.3731L16.91 13.4383Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M16.1434 15.1303L17.312 15.836L19.606 15.0664L18.458 14.3731L16.1434 15.1303Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M19.606 15.0664L17.312 15.836L19.2502 17.0064L21.5172 16.2205L19.606 15.0664Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M21.5172 16.2205L19.2502 17.0064L21.3688 18.2858L23.7118 17.5458L21.5172 16.2205Z"
-                    fill="black"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M9.02042 12.8124L6.88489 11.5262L9.11382 10.8852L11.2102 12.1512L9.02042 12.8124Z"
-                    fill="black"
-                  />
-                </svg></span
-              >
-            </div>
           </div>
         </div>
-        <div class="form-control w-2/3">
+        <div class="grid place-items-center mx-4">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 13 13"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6.5 0C5.21442 0 3.95772 0.381218 2.8888 1.09545C1.81988 1.80968 0.986756 2.82484 0.494786 4.01256C0.00281635 5.20028 -0.125905 6.50721 0.124899 7.76809C0.375703 9.02896 0.994767 10.1872 1.90381 11.0962C2.81285 12.0052 3.97104 12.6243 5.23192 12.8751C6.49279 13.1259 7.79973 12.9972 8.98744 12.5052C10.1752 12.0132 11.1903 11.1801 11.9046 10.1112C12.6188 9.04229 13 7.78558 13 6.5C12.9982 4.77665 12.3128 3.12441 11.0942 1.90582C9.87559 0.687224 8.22335 0.00181989 6.5 0ZM6.5 12C5.41221 12 4.34884 11.6774 3.44437 11.0731C2.5399 10.4687 1.83495 9.60975 1.41867 8.60476C1.00238 7.59977 0.893465 6.4939 1.10568 5.427C1.3179 4.36011 1.84173 3.3801 2.61092 2.61091C3.3801 1.84172 4.36011 1.3179 5.42701 1.10568C6.4939 0.893462 7.59977 1.00238 8.60476 1.41866C9.60976 1.83494 10.4687 2.53989 11.0731 3.44436C11.6774 4.34883 12 5.4122 12 6.5C11.9983 7.95818 11.4184 9.35617 10.3873 10.3873C9.35617 11.4184 7.95819 11.9983 6.5 12ZM9.35375 6.14625C9.40024 6.19269 9.43712 6.24783 9.46228 6.30853C9.48745 6.36923 9.5004 6.43429 9.5004 6.5C9.5004 6.56571 9.48745 6.63077 9.46228 6.69147C9.43712 6.75217 9.40024 6.80731 9.35375 6.85375L7.35375 8.85375C7.25993 8.94757 7.13268 9.00028 7 9.00028C6.86732 9.00028 6.74007 8.94757 6.64625 8.85375C6.55243 8.75993 6.49972 8.63268 6.49972 8.5C6.49972 8.36732 6.55243 8.24007 6.64625 8.14625L7.79313 7H4C3.86739 7 3.74022 6.94732 3.64645 6.85355C3.55268 6.75979 3.5 6.63261 3.5 6.5C3.5 6.36739 3.55268 6.24021 3.64645 6.14645C3.74022 6.05268 3.86739 6 4 6H7.79313L6.64625 4.85375C6.55243 4.75993 6.49972 4.63268 6.49972 4.5C6.49972 4.36732 6.55243 4.24007 6.64625 4.14625C6.74007 4.05243 6.86732 3.99972 7 3.99972C7.13268 3.99972 7.25993 4.05243 7.35375 4.14625L9.35375 6.14625Z"
+              fill="black"
+            />
+          </svg>
+        </div>
+        <div class="form-control w-1/3">
           <label class="label" for="percent">I will receive...</label>
           <div class="relative">
             <input
               id="percent"
               type="text"
               class="input input-bordered w-full"
-              bind:value={data.percent}
+              bind:value={percent}
               readonly
             />
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
-            >
-              <!-- Heroicon name: mini/exclamation-circle -->
-              <span class="font-bold">%</span>
-            </div>
           </div>
         </div>
-        <div class="mt-16">
-          <button class="btn btn-outline btn-block rounded-none">Buy</button>
-          <!--
-          <button
-            type="button"
-            class="btn btn-outline rounded-none"
-            on:click={handleCancel}>Cancel</button
-          >
-          -->
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </Modal>

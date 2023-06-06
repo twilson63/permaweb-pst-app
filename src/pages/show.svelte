@@ -35,7 +35,7 @@
   import { stamp, getCount } from "../lib/stamp.js";
   import { getProfile } from "../lib/account.js";
 
-  const REBAR = "dhfCFye-ocZbJo4Nla0Tr47uu2mS0WNln_iBP7uyXtA";
+  const U = "rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk";
 
   export let id;
   let src = "https://placehold.co/400";
@@ -146,6 +146,9 @@
   let tradeData = {};
 
   async function getData(id) {
+    if (globalThis.arweaveWallet) {
+      address = await globalThis.arweaveWallet.getActiveAddress();
+    }
     const sumBalance = compose(
       reduce((acc, [k, v]) => acc + v, 0),
       toPairs
@@ -155,20 +158,37 @@
 
     // get trade info and append to assetData
     tradeData = await getTradeData({ readState: services.readState }, id)
+      /*
       .map((balances) => {
         const units = sumBalance(balances);
+        let owned = 0;
+        if (address) {
+          owned = balances[address];
+        }
         return {
           totalBar: 0,
-          percent: Math.floor((balances[address] / units) * 100),
+          percent: Math.floor((owned / units) * 100),
           units,
-          owned: balances[address] || 0,
+          owned: owned || 0,
           canPurchase: balances[id] || 0,
           sponsors: reject(equals(id), Object.keys(balances)).length,
           bar: 0.01,
         };
       })
+      */
+
       .toPromise();
-    assetData = { id, src, ...assetData, ...tradeData };
+
+    assetData = {
+      id,
+      src,
+      ...assetData,
+      ...tradeData,
+      user: address,
+      u: 0.01,
+      percent: 100,
+    };
+
     return assetData;
   }
 
@@ -181,7 +201,7 @@
     showProcessing = true;
     try {
       const result = await sell(
-        { ...services, RebAR: REBAR },
+        { ...services, RebAR: U },
         assetData.id,
         assetData.percent,
         Number(assetData.bar) * 1e6
@@ -376,6 +396,7 @@
     </section>
   </main>
   <Sell bind:open={showSell} bind:data={assetData} on:submit={listAsset} />
+  <Buy bind:open={showBuy} bind:data={assetData} />
 {:catch e}
   <div class="alert alert-error">
     <h2 class="text-3xl">{e.message}</h2>
@@ -394,5 +415,4 @@
   on:help={() => (showHelp = true)}
 />
 <WalletHelp bind:open={showHelp} />
-<Buy bind:open={showBuy} data={{ owned: 100, units: 100 }} />
 <Processing bind:open={showProcessing} />

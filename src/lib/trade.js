@@ -5,8 +5,12 @@ export function getTradeData(env, contract) {
   const readState = fromPromise(env.readState)
   return of(contract)
     .chain(readState)
-    .map(path(['cachedValue', 'state', 'balances']))
-
+    .map(path(['cachedValue', 'state']))
+    .map(c => ({ c, contractId: contract }))
+    .map(getTotal)
+    .map(getSponsors)
+    .map(getOrders)
+    .map(getPrice)
 }
 
 // export function orders(env, contract) {
@@ -79,4 +83,60 @@ export function buy(env, contract, qty) {
       qty: ctx.qty
     }))
 
+}
+
+
+/** helper functions */
+
+function getPrice(ctx) {
+  if (ctx.c.pairs?.length < 1) {
+    return { ...ctx, price: 1000 }
+  }
+  const orders = ctx.c.pairs[0].orders
+  let price = 1000
+  if (orders.length > 0) {
+    price = orders.reduce((a, v) => v.price < a ? v.price : a, Infinity)
+  } else if (orders.length === 1) {
+    price = orders[0].price
+  }
+  return { ...ctx, price }
+}
+
+function getTotal({ c, contractId }) {
+  return ({
+    total: Object.values(c.balances).reduce((a, b) => a + b, 0),
+    c,
+    contractId
+  })
+}
+
+function getSponsors({ c, total, contractId }) {
+  const items = Object.keys(c.balances)
+    .filter(b => b !== contractId)
+    .map(b => ({
+      id: b,
+      type: 'sponsor',
+      percent: Math.floor((c.balances[b] / total) * 100)
+    }))
+  return {
+    total,
+    c,
+    items
+  }
+}
+
+function getOrders({ c, items, total }) {
+  if (c.pairs.length === 0) {
+    return { c, items }
+  }
+  const orders = c.pairs[0].orders
+    .map(o => ({
+      id: o.id,
+      type: 'order',
+      percent: Math.floor((o.quantity / total) * 100)
+    }))
+  return {
+    c,
+    items: items.concat(orders)
+  }
 }

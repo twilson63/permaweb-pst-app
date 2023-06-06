@@ -12,6 +12,22 @@ const options = {
 export const readState = (id) => warp.contract(id)
   .setEvaluationOptions(options)
   .readState()
+  .catch(e => warp
+    .contract(id)
+    .setEvaluationOptions({ ...options, remoteStateSyncSource: 'https://dre-5.warp.cc/contract' })
+    .readState()
+  )
+  .catch(e => warp
+    .contract(id)
+    .setEvaluationOptions({ ...options, remoteStateSyncSource: 'https://dre-6.warp.cc/contract' })
+    .readState()
+  )
+  .catch(e => warp
+    .contract(id)
+    .setEvaluationOptions({ ...options, remoteStateSyncSource: 'https://dre-2.warp.cc/contract' })
+    .readState()
+  )
+
 
 export function write(contract, input) {
   return warp.contract(contract)
