@@ -133,7 +133,8 @@ function getOrders({ c, items, total }) {
     .map(o => ({
       id: o.id,
       type: 'order',
-      percent: Math.floor((o.quantity / total) * 100)
+      percent: Math.floor((o.quantity / total) * 100),
+      price: o.quantity * o.price
     }))
   return {
     c,
