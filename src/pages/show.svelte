@@ -193,7 +193,8 @@
   }
 
   async function listAsset() {
-    if (!Number.isInteger(Number(assetData.bar) * 1e6)) {
+    console.log({ u: assetData.u });
+    if (!Number.isInteger(Number(assetData.u) * 1e6)) {
       alert("Price must be a number!");
       return;
     }
@@ -204,7 +205,7 @@
         { ...services, RebAR: U },
         assetData.id,
         assetData.percent,
-        Number(assetData.bar) * 1e6
+        Number(assetData.u)
       ).toPromise();
       await new Promise((r) => setTimeout(r, 1000));
       showProcessing = false;
@@ -364,6 +365,10 @@
                     >
                   {:else}
                     <button
+                      disabled={asset.items.reduce(
+                        (a, v) => (a ? v.type !== "order" : a),
+                        true
+                      )}
                       class="btn btn-outline btn-sm rounded-none"
                       on:click={() => (showBuy = true)}>Buy</button
                     >

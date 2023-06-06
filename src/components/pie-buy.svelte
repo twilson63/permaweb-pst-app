@@ -25,7 +25,7 @@
     const slices = items.map((item, idx) => ({
       ...item,
       percent: item.percent / 100,
-      color: colors[idx],
+      color: item.type === "sponsor" ? "#4BBEB7" : "#85F473",
     }));
     // find p
     // change color
