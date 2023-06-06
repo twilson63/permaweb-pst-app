@@ -192,8 +192,9 @@
     return assetData;
   }
 
+  async function purchaseAsset() {}
+
   async function listAsset() {
-    console.log({ u: assetData.u });
     if (!Number.isInteger(Number(assetData.u) * 1e6)) {
       alert("Price must be a number!");
       return;
@@ -401,7 +402,7 @@
     </section>
   </main>
   <Sell bind:open={showSell} bind:data={assetData} on:submit={listAsset} />
-  <Buy bind:open={showBuy} bind:data={assetData} />
+  <Buy bind:open={showBuy} bind:data={assetData} on:submit={purchaseAsset} />
 {:catch e}
   <div class="alert alert-error">
     <h2 class="text-3xl">{e.message}</h2>

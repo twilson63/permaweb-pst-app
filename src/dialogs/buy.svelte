@@ -22,14 +22,6 @@
     let remaining =
       Number(data.units) - Math.floor(Number(buyQty) / Number(data.price));
     percent = Math.floor((purchase / remaining) * 100);
-    console.log("buyQty", {
-      buyQty,
-      percent,
-      remaining,
-      price: data.price,
-    });
-
-    //data.percent = percent;
   }
 
   function handleSubmit() {
@@ -58,18 +50,6 @@
         </div>
       </div>
 
-      <!-- <div class="mt-4">
-        <div class="my-2 text-center text-xs">
-          <em>Slide for % of Atomic Asset to <u>sell</u></em>
-        </div>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          bind:value={percent}
-          class="range range-secondary range-xs"
-        />
-      </div> -->
       <div class="flex">
         <div class="form-control w-1/3">
           <label class="label" for="spend">I will spend...</label>
