@@ -67,12 +67,12 @@ export function sell(env, contract, percent, price) {
     }))
 }
 
-
+// 
 export function buy(env, contract, qty) {
   const write = fromPromise(env.write)
 
   return of({ contract, qty })
-    .map(assoc('qty', Math.floor(qty * 1e6)))
+    .map(assoc('qty', Math.floor(qty)))
     .chain(ctx => write(env.RebAR, { function: 'allow', target: ctx.contract, qty: ctx.qty })
       .map((result) => assoc('transaction', result.originalTxId, ctx))
     )
@@ -93,12 +93,14 @@ function getPrice(ctx) {
     return { ...ctx, price: 1000 }
   }
   const orders = ctx.c.pairs[0].orders
+
   let price = 1000
   if (orders.length > 0) {
     price = orders.reduce((a, v) => v.price < a ? v.price : a, Infinity)
   } else if (orders.length === 1) {
     price = orders[0].price
   }
+
   return { ...ctx, price }
 }
 
@@ -134,7 +136,8 @@ function getOrders({ c, items, total }) {
       id: o.id,
       type: 'order',
       percent: Math.floor((o.quantity / total) * 100),
-      price: o.quantity * o.price
+      price: o.quantity * o.price,
+      qty: o.quantity
     }))
   return {
     c,

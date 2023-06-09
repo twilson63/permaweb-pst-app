@@ -7,7 +7,6 @@
   export let user = "";
 
   let svgEl;
-  //let p = purchase;
 
   afterUpdate(draw);
   $: {
@@ -15,15 +14,17 @@
       draw();
     }
   }
+
   function draw() {
-    console.log("DRAW");
     // need to increment color by 5
     const colors = ["#85F473", "#F1F1F1", "#4BBEB7", "#5DC5BE", "#85F473"];
-    const slices = items.map((item, idx) => ({
-      ...item,
-      percent: item.percent / 100,
-      color: colors[idx],
-    }));
+    const slices = items.map((item, idx) => {
+      return {
+        ...item,
+        percent: item.percent / 100,
+        color: colors[idx],
+      };
+    });
 
     // find p
     // change color
@@ -65,4 +66,5 @@
   }
 </script>
 
+<!-- <p>Percent: {percent}</p> -->
 <svg bind:this={svgEl} viewBox="-1 -1 2 2" style="transform: rotate(-90deg)" />

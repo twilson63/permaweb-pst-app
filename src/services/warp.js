@@ -6,7 +6,7 @@ const options = {
   allowBigInt: true,
   internalWrites: true,
   unsafeClient: 'skip',
-  remoteStateSyncEnabled: true
+  //remoteStateSyncEnabled: true
 }
 
 export const readState = (id) => warp.contract(id)

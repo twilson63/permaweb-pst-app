@@ -34,8 +34,12 @@
   <form on:submit|preventDefault={handleSubmit}>
     <div class="flex space-x-8 flex-col md:flex-row space-y-8">
       <Asset asset={data}>
-        <p class="w-full text-xs mt-8 mb-2"><em>Click to sell asset.</em></p>
-        <button class="btn btn-outline btn-block">Sell Asset</button>
+        <div class="text-xs my-4 text-center">
+          Need $U? -
+          <a class="link" target="_blank" href="https://getu.g8way.io"
+            >https://getu.g8way.io</a
+          >
+        </div>
       </Asset>
       <div class="flex md:w-1/2 flex-col">
         <div class="flex justify-center">
@@ -56,11 +60,18 @@
           />
         </div>
         <div class="flex space-x-4 justify-center">
-          <div class="form-control w-[150px]">
-            <input
-              class="input input-bordered rounded-none text-center"
-              bind:value={data.percent}
-            />
+          <div class="form-control">
+            <div class="relative">
+              <input
+                class="input input-bordered rounded-none text-center  w-[150px]"
+                bind:value={data.percent}
+              />
+              <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
+              >
+                <span class="font-bold"> % </span>
+              </div>
+            </div>
           </div>
           <div class="grid place-items-center">
             <svg
@@ -199,6 +210,10 @@
               </div>
             </div>
           </div>
+        </div>
+        <div>
+          <p class="w-full text-xs mt-8 mb-2"><em>Click to sell asset.</em></p>
+          <button class="btn btn-outline btn-block">Sell Asset</button>
         </div>
       </div>
     </div>

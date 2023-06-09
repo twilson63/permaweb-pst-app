@@ -231,12 +231,11 @@ export function pstsByOwner(addr) {
     .then(prop('data'))
     .then(({ data: { transactions: edges } }) => edges.edges)
     .then(pluck("node"))
-    .then((x) => (console.log(x), x))
     .then(map(transformTx));
 }
 
 export async function imagesByOwner(addr) {
-  return fetch('https://arweave.net/graphql', {
+  return fetch('https://g8way.io/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -274,7 +273,7 @@ query {
 }
 
 export async function getAssetData(id) {
-  return fetch(`https://arweave.net/graphql`, {
+  return fetch(`https://g8way.io/graphql`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

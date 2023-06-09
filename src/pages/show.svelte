@@ -3,7 +3,7 @@
   import { getAssetData } from "../lib/asset.js";
   import { getTradeData } from "../lib/trade.js";
   import services from "../services/index.js";
-  import { sell } from "../lib/trade.js";
+  import { sell, buy } from "../lib/trade.js";
   import { atomicToStamp } from "../lib/utils.js";
   import Construction from "../dialogs/construction.svelte";
   import Stamping from "../dialogs/stamping.svelte";
@@ -34,8 +34,11 @@
   import { imgCache, profile } from "../store.js";
   import { stamp, getCount } from "../lib/stamp.js";
   import { getProfile } from "../lib/account.js";
+  import { ArweaveWebWallet } from "arweave-wallet-connector";
 
   const U = "rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk";
+  const wallet = new ArweaveWebWallet();
+  wallet.setUrl("arweave.app");
 
   export let id;
   let src = "https://placehold.co/400";
@@ -66,7 +69,12 @@
 
     if (window.arweaveWallet) {
       address = await window.arweaveWallet.getActiveAddress();
+      if (!address) {
+        await wallet.connect();
+        address = wallet.address;
+      }
     }
+    console.log({ address });
   });
 
   let constructionDlg = false;
@@ -147,7 +155,7 @@
 
   async function getData(id) {
     if (globalThis.arweaveWallet) {
-      address = await globalThis.arweaveWallet.getActiveAddress();
+      address = await arweaveWallet.getActiveAddress();
     }
     const sumBalance = compose(
       reduce((acc, [k, v]) => acc + v, 0),
@@ -157,42 +165,66 @@
     assetData = await getAssetData(id);
 
     // get trade info and append to assetData
-    tradeData = await getTradeData({ readState: services.readState }, id)
-      /*
-      .map((balances) => {
-        const units = sumBalance(balances);
-        let owned = 0;
-        if (address) {
-          owned = balances[address];
-        }
-        return {
-          totalBar: 0,
-          percent: Math.floor((owned / units) * 100),
-          units,
-          owned: owned || 0,
-          canPurchase: balances[id] || 0,
-          sponsors: reject(equals(id), Object.keys(balances)).length,
-          bar: 0.01,
-        };
-      })
-      */
-
-      .toPromise();
+    tradeData = await getTradeData(
+      { readState: services.readState },
+      id
+    ).toPromise();
 
     assetData = {
       id,
       src,
       ...assetData,
       ...tradeData,
+      sponsors: tradeData.items
+        .filter((item) => item.type === "sponsor")
+        .map((_) => 1)
+        .reduce((a, b) => a + b, 0),
       user: address,
-      u: 0.01,
+      u: tradeData.price / 1e6,
       percent: 100,
     };
 
     return assetData;
   }
 
-  async function purchaseAsset() {}
+  async function purchaseAsset() {
+    let address;
+    if (window.arweaveWallet) {
+      await window.arweaveWallet.connect();
+      address = await window.arweaveWallet.getActiveAddress();
+    } else {
+      await wallet.connect();
+      address = wallet.address;
+    }
+
+    const uBalance = await fetch(
+      "https://dre-6.warp.cc/contract/?id=rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk&query=$.balances." +
+        address
+    )
+      .then((r) => r.json())
+      .then((r) => r.result[0] || 0);
+
+    if (uBalance < assetData.price) {
+      alert("Not enough U to purchase!");
+      return;
+    }
+    showBuy = false;
+    showProcessing = true;
+    let purchasePrice =
+      assetData.items.find((i) => i.type === "order")?.price || 0;
+    try {
+      const result = await buy(
+        { ...services, RebAR: U },
+        assetData.id,
+        purchasePrice
+      ).toPromise();
+      showProcessing = false;
+    } catch (e) {
+      showProcessing = false;
+      errorDlg = true;
+      errorMsg = e.message;
+    }
+  }
 
   async function listAsset() {
     if (!Number.isInteger(Number(assetData.u) * 1e6)) {
@@ -366,10 +398,6 @@
                     >
                   {:else}
                     <button
-                      disabled={asset.items.reduce(
-                        (a, v) => (a ? v.type !== "order" : a),
-                        true
-                      )}
                       class="btn btn-outline btn-sm rounded-none"
                       on:click={() => (showBuy = true)}>Buy</button
                     >
@@ -402,7 +430,7 @@
     </section>
   </main>
   <Sell bind:open={showSell} bind:data={assetData} on:submit={listAsset} />
-  <Buy bind:open={showBuy} bind:data={assetData} on:submit={purchaseAsset} />
+  <Buy bind:open={showBuy} bind:data={assetData} on:click={purchaseAsset} />
 {:catch e}
   <div class="alert alert-error">
     <h2 class="text-3xl">{e.message}</h2>
