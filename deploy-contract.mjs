@@ -1,9 +1,10 @@
 import Arweave from 'arweave'
 import fs from 'fs'
+import { takeLast } from 'ramda'
 
 const wallet = JSON.parse(fs.readFileSync('./wallet.json', 'utf-8'))
 
-const arweave = Arweave.init({ host: 'arweave.net', port: 443, protocol: 'https' })
+const arweave = Arweave.init({ host: import.meta.env.DEV ? 'arweave.net' : takeLast(2, globalThis.location.host.split('.')).join('.') , port: 443, protocol: 'https' })
 
 async function main() {
   const src = fs.readFileSync('./public/contract.js', 'utf-8')

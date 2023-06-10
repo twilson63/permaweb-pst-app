@@ -36,4 +36,7 @@
   <Route path="/hx/:addr" let:meta>
     <History addr={meta.params.addr} />
   </Route>
+  <Route path="/psts/:addr" let:meta>
+    <History addr={meta.params.addr} />
+  </Route>
 </Transition>

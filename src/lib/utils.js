@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from "bignumber.js";
 import {
   compose,
   takeLast,
@@ -11,9 +11,10 @@ import {
   T,
 } from "ramda";
 
-export const stampToAtomic = (stamp) => BigNumber.clone({ DECIMAL_PLACES: 12 })(stamp).shiftedBy(12).toFixed(0)
-export const atomicToStamp = (atomic) => BigNumber.clone({ DECIMAL_PLACES: 12 })(atomic).shiftedBy(-12).toFixed(12)
-
+export const stampToAtomic = (stamp) =>
+  BigNumber.clone({ DECIMAL_PLACES: 12 })(stamp).shiftedBy(12).toFixed(0);
+export const atomicToStamp = (atomic) =>
+  BigNumber.clone({ DECIMAL_PLACES: 12 })(atomic).shiftedBy(-12).toFixed(12);
 
 export function getHost() {
   return compose(

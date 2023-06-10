@@ -1,15 +1,17 @@
 import fileReaderStream from "https://esm.sh/filereader-stream";
-import { split, map, trim, append } from "ramda";
-import { WarpFactory } from 'warp-contracts'
-import { DeployPlugin } from 'warp-contracts-plugin-deploy'
+import { split, map, trim, append, takeLast } from "ramda";
+import { WarpFactory } from "warp-contracts";
+import { DeployPlugin } from "warp-contracts-plugin-deploy";
 
 const arweave = Arweave.init({
-  host: 'arweave.net',
+  host: import.meta.env.DEV
+    ? "arweave.net"
+    : takeLast(2, globalThis.location.host.split(".")).join("."),
   port: 443,
-  protocol: 'https'
-})
+  protocol: "https",
+});
 
-const SRC = __ASSET_SOURCE__
+const SRC = __ASSET_SOURCE__;
 
 const warp = WarpFactory.forMainnet().use(new DeployPlugin());
 
@@ -22,9 +24,7 @@ const toArrayBuffer = (file) =>
     });
   });
 
-export async function fund() {
-
-}
+export async function fund() {}
 
 export async function deploy(bundlr, asset) {
   let assetType = asset.file.type.split("/")[0] || "image";
@@ -68,7 +68,13 @@ export async function deploy(bundlr, asset) {
     ...topicData,
   ];
   if (asset.audioRenderer) {
-    _tags = append({ name: 'Render-With', value: 'f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc' }, _tags)
+    _tags = append(
+      {
+        name: "Render-With",
+        value: "f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc",
+      },
+      _tags
+    );
   }
   const dataStream = fileReaderStream(asset.file);
   const result = await bundlr.upload(dataStream, {
@@ -76,57 +82,59 @@ export async function deploy(bundlr, asset) {
   });
 
   await warp.register(result.id, "node2");
-  return result
+  return result;
 }
 
 export async function deployAr(asset) {
   const data = await toArrayBuffer(asset.file);
   const addr = await window.arweaveWallet.getActiveAddress();
-  console.log(data)
-  const tx = await arweave.createTransaction({ data })
-  tx.addTag('App-Name', 'SmartWeaveContract')
-  tx.addTag('App-Version', '0.3.0')
-  tx.addTag('Content-Type', asset.file.type)
+  console.log(data);
+  const tx = await arweave.createTransaction({ data });
+  tx.addTag("App-Name", "SmartWeaveContract");
+  tx.addTag("App-Version", "0.3.0");
+  tx.addTag("Content-Type", asset.file.type);
 
-  tx.addTag('Contract-Src', SRC)
-  tx.addTag('Init-State', JSON.stringify({
-    creator: addr,
-    ticker: "PST-ASSET",
-    balances: {
-      [addr]: 100
-    },
-    contentType: asset.file.type,
-    emergencyHaltWallet: addr,
-    pairs: [],
-    settings: [["isTradeable", true]]
-  }))
-  tx.addTag('Forks', asset.forkTX)
-  tx.addTag('Creator', addr)
-  tx.addTag('Title', asset.title)
-  tx.addTag('Description', asset.description)
-  tx.addTag('Thumbnail', asset.thumbnail)
-  let assetType = asset.file.type.split('/')[0] || 'image'
-  if (assetType === 'application') {
-    assetType = asset.file.type.split('/')[1]
+  tx.addTag("Contract-Src", SRC);
+  tx.addTag(
+    "Init-State",
+    JSON.stringify({
+      creator: addr,
+      ticker: "PST-ASSET",
+      balances: {
+        [addr]: 100,
+      },
+      contentType: asset.file.type,
+      emergencyHaltWallet: addr,
+      pairs: [],
+      settings: [["isTradeable", true]],
+    })
+  );
+  tx.addTag("Forks", asset.forkTX);
+  tx.addTag("Creator", addr);
+  tx.addTag("Title", asset.title);
+  tx.addTag("Description", asset.description);
+  tx.addTag("Thumbnail", asset.thumbnail);
+  let assetType = asset.file.type.split("/")[0] || "image";
+  if (assetType === "application") {
+    assetType = asset.file.type.split("/")[1];
   }
-  tx.addTag('Type', assetType)
+  tx.addTag("Type", assetType);
 
-  map(trim, split(',', asset.topics)).forEach(t => {
-    tx.addTag('Topic:' + t, t)
-  })
+  map(trim, split(",", asset.topics)).forEach((t) => {
+    tx.addTag("Topic:" + t, t);
+  });
 
   if (asset.audioRenderer) {
-    tx.addTag('Render-With', 'f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc')
+    tx.addTag("Render-With", "f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc");
   }
 
-  await arweave.transactions.sign(tx)
-  const result = await arweave.transactions.post(tx)
+  await arweave.transactions.sign(tx);
+  const result = await arweave.transactions.post(tx);
 
   if (result.status === 400) {
-    throw new Error('Not enough $AR in wallet to upload pst!')
+    throw new Error("Not enough $AR in wallet to upload pst!");
   } else if (result.status === 200) {
-    return tx
+    return tx;
   }
-  throw new Error(result.message + ' while trying to upload!')
-
+  throw new Error(result.message + " while trying to upload!");
 }

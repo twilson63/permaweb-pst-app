@@ -14,6 +14,9 @@
   import WalletHelp from "../dialogs/wallet-help.svelte";
   import Transfering from "../dialogs/transfering.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
+  import Loading from '../dialogs/loading.svelte'
+  import stampSvg from '../assets/stamp.svg'
+
   import { profile } from "../store.js";
   import { reject, concat, sortWith, descend, prop, takeLast } from "ramda";
 
@@ -30,7 +33,9 @@
   let canTransfer = false;
   let showTransfering = false;
   let showError = false;
+  let showLoading = false;
   let errorMessage = "An Error Occuried!";
+  let server = import.meta.env.PROD ? 'https://arweave.net' : `https://${takeLast(2, globalThis.location.host.split('.')).join('.')}`
 
   function handleCopy(id) {
     items[id] = false;
@@ -87,7 +92,16 @@
   }
 
   async function getImages(addr) {
-    return await pstsByOwner(addr);
+    try {
+      showLoading = true;
+      const results = await pstsByOwner(addr);
+      showLoading = false;
+      return results
+    } catch (e) {
+      showLoading =false
+      errorMessage = e.message;
+      showError = true
+    }
   }
 
   let images = getImages(addr);
@@ -96,22 +110,20 @@
 <Navbar on:connect={() => (showConnect = true)} />
 <main class="px-8 max-w-screen">
   <header class="my-16">
-    <h1 class="text-3xl">History</h1>
+    <h1 class="text-3xl">Showcase</h1>
   </header>
   <section class="flex flex-col items-center max-w-screen">
     {#await images then images}
       {#each images as img}
-        <div class="md:hidden flex flex-col space-y-4 p-4 mb-4 shadow-xl">
+        <div class="md:hidden flex flex-col space-y-4 p-2 mb-4 border-b-2">
+          <div class="w-full flex justify-center">
+            <img
+              class="py-2"
+              src="{server}/{img.id}"
+              alt={img.title}
+            />
+          </div>
           <div class="flex space-x-2">
-            <!--
-            <div class="w-[75px] flex justify-center">
-              <img
-                class="h-[48px] py-2"
-                src="https://arweave.net/{img.id}"
-                alt={img.title}
-              />
-            </div>
-            -->
             <div class="flex flex-col w-[250px]">
               <h3 class="text-[14px] font-bold">{img.title}</h3>
               <p class="text-[10px] font-light">
@@ -203,7 +215,7 @@
                 <div class="w-[75px] flex justify-center">
                   <img
                     class="h-[75px] w-[75]"
-                    src="https://arweave.net/{img.id}"
+                    src="{server}/{img.id}"
                     onerror="this.src = 'assets/pst.svg'"
                   />
                 </div>
@@ -231,7 +243,7 @@
                   {/await}
                   <img
                     class="ml-2 h-[24px] w-[24px]"
-                    src="assets/stamp2.svg"
+                    src="{stampSvg}"
                     alt="stamp logo"
                   />
                 </p>
@@ -430,3 +442,4 @@
   title={transferData.title}
 />
 <ErrorDialog bind:open={showError} msg={errorMessage} />
+<Loading bind:open={showLoading} />

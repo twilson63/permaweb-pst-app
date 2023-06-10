@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { writable } from "svelte/store";
 
-export const imgCache = writable([])
-export const profile = writable(null)
+export const imgCache = writable([]);
+export const profile = writable(null);

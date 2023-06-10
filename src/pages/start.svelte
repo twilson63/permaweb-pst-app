@@ -16,7 +16,7 @@
       <p class="text-2xl dark:text-white">Trade on the Permaweb</p>
       <div class="flex space-x-4">
         <button class="btn rounded-none" on:click={() => (showConnect = true)}
-          >Sell PSTs</button
+          >Create/Sell PSTs</button
         >
       </div>
       <!-- <div class="flex space-x-4">
@@ -25,7 +25,7 @@
         >
         <a href="/about" class="btn btn-outline">Learn More</a>
       </div> -->
-      <div class="w-full">
+      <!-- <div class="w-full">
         <h3 class="text-xl text-center">Eye Blob Sale!</h3>
         <div class="flex items-center justify-center">
           <img
@@ -75,7 +75,7 @@
             >
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- {#await listAssets(9) then imgs}
         <div class="w-full grid gap-4 grid-cols-3 grid-flow-row">
           {#each imgs as img}

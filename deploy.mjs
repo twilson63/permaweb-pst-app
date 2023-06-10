@@ -2,10 +2,12 @@ import Bundlr from '@bundlr-network/client'
 import { WarpFactory, defaultCacheOptions } from 'warp-contracts/mjs'
 import fs from 'fs'
 import Arweave from 'arweave'
-
+import { takeLast } from 'ramda'
 
 const ANT = '5H0wvyJzmNrzASrS9FtPlhfteS7_rCN9nxSeQPvXWVM'
-const arweave = Arweave.init({ host: 'arweave.net', port: 443, protocol: 'https' })
+const arweave = Arweave.init({ host: import.meta.env.DEV ? 'arweave.net' : takeLast(2, globalThis.location.host.split('.')).join('.') , port: 443, protocol: 'https' })
+
+// const arweave = Arweave.init({ host: 'arweave.net', port: 443, protocol: 'https' })
 //const jwk = JSON.parse(fs.readFileSync('../wallet.json', 'utf-8'))
 const jwk = JSON.parse(Buffer.from(process.env.ARNS, 'base64').toString('utf-8'))
 
