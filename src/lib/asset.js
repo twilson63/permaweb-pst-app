@@ -289,7 +289,7 @@ export async function getAssetData(id) {
       renderWith: prop('value', find(propEq('name', 'Render-With'), data.transaction.tags)) || null,
       timestamp: data.transaction?.block?.timestamp || Date.now() / 1000
     }))
-    .then(x => (console.log('data', x), x))
+    //.then(x => (console.log('data', x), x))
   //.then(_ => ({ title: 'Test', description: 'Description' }))
 }
 

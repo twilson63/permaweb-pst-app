@@ -52,7 +52,7 @@ export async function deploy(bundlr, asset) {
         pairs: [],
         ticker: "PST",
         balances: {
-          [addr]: 1 * 1e6,
+          [addr]: 100,
         },
         emergencyHaltWallet: addr,
         contentType: asset.file.type,
@@ -93,7 +93,7 @@ export async function deployAr(asset) {
     creator: addr,
     ticker: "PST-ASSET",
     balances: {
-      [addr]: 10000
+      [addr]: 100
     },
     contentType: asset.file.type,
     emergencyHaltWallet: addr,

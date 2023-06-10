@@ -183,14 +183,14 @@
       u: tradeData.price / 1e6,
       percent: 100,
     };
-
+    console.log({assetData})
     return assetData;
   }
 
   async function purchaseAsset() {
     let address;
     if (window.arweaveWallet) {
-      await window.arweaveWallet.connect();
+      await window.arweaveWallet.connect(["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"], {name: 'PST'});
       address = await window.arweaveWallet.getActiveAddress();
     } else {
       await wallet.connect();
@@ -391,12 +391,12 @@
               <!-- if owner, then trade, if not owner, buy -->
               <div>
                 <div class="flex flex-col">
-                  {#if asset.owner === address}
+                  {#if asset.items.find(i => i.type === "sponsor" && i.id === address && i.percent > 0)}
                     <button
                       class="btn btn-outline btn-sm rounded-none"
                       on:click={() => (showSell = true)}>Trade</button
                     >
-                  {:else}
+                  {:else if asset.items.find(i => i.type === "order")}
                     <button
                       class="btn btn-outline btn-sm rounded-none"
                       on:click={() => (showBuy = true)}>Buy</button

@@ -131,7 +131,11 @@ function getOrders({ c, items, total }) {
   if (c.pairs.length === 0) {
     return { c, items }
   }
-  const orders = c.pairs[0].orders
+  const pair = c.pairs.find(p => p.pair.includes('rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk'))
+  if (!pair) {
+    return { c, items }
+  }
+  const orders = pair.orders
     .map(o => ({
       id: o.id,
       type: 'order',
