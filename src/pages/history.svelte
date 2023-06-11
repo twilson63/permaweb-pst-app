@@ -14,8 +14,8 @@
   import WalletHelp from "../dialogs/wallet-help.svelte";
   import Transfering from "../dialogs/transfering.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
-  import Loading from '../dialogs/loading.svelte'
-  import stampSvg from '../assets/stamp.svg'
+  import Loading from "../dialogs/loading.svelte";
+  import stampSvg from "../assets/stamp.svg";
 
   import { profile } from "../store.js";
   import { reject, concat, sortWith, descend, prop, takeLast } from "ramda";
@@ -35,7 +35,9 @@
   let showError = false;
   let showLoading = false;
   let errorMessage = "An Error Occuried!";
-  let server = import.meta.env.PROD ? 'https://arweave.net' : `https://${takeLast(2, globalThis.location.host.split('.')).join('.')}`
+  let server = import.meta.env.DEV
+    ? "https://arweave.net"
+    : `https://${takeLast(2, globalThis.location.host.split(".")).join(".")}`;
 
   function handleCopy(id) {
     items[id] = false;
@@ -96,11 +98,11 @@
       showLoading = true;
       const results = await pstsByOwner(addr);
       showLoading = false;
-      return results
+      return results;
     } catch (e) {
-      showLoading =false
+      showLoading = false;
       errorMessage = e.message;
-      showError = true
+      showError = true;
     }
   }
 
@@ -117,11 +119,7 @@
       {#each images as img}
         <div class="md:hidden flex flex-col space-y-4 p-2 mb-4 border-b-2">
           <div class="w-full flex justify-center">
-            <img
-              class="py-2"
-              src="{server}/{img.id}"
-              alt={img.title}
-            />
+            <img class="py-2" src="{server}/{img.id}" alt={img.title} />
           </div>
           <div class="flex space-x-2">
             <div class="flex flex-col w-[250px]">
@@ -243,7 +241,7 @@
                   {/await}
                   <img
                     class="ml-2 h-[24px] w-[24px]"
-                    src="{stampSvg}"
+                    src={stampSvg}
                     alt="stamp logo"
                   />
                 </p>
