@@ -46,8 +46,7 @@
   let server = import.meta.env.DEV
     ? "https://arweave.net"
     : `https://${takeLast(2, globalThis.location.host.split(".")).join(".")}`;
-  let server = import.meta.env.DEV ? 'https://arweave.net' : `https://${takeLast(2, globalThis.location.host.split('.')).join('.')}`
-
+  
   let src = "https://placehold.co/400";
   let imageMsg = "";
   let stampDlg = false;
