@@ -15,7 +15,15 @@ import {
 import { WarpFactory } from "warp-contracts/web";
 import Account from "arweave-account";
 
-let server = import.meta.env.DEV ? "arweave.net" : takeLast(2, globalThis.location.host.split(".")).join(".")
+let prod = 'arweave.net'
+if (import.meta.env.PROD) {
+  prod = takeLast(2, globalThis.location.host.split(".")).join(".")
+  if (prod === 'arweave.dev') {
+    prod = 'arweave.net'
+  }
+}
+
+let server = import.meta.env.DEV ? "arweave.net" : prod
 
 const arweave = Arweave.init({
   host: server,

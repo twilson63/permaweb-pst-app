@@ -14,5 +14,6 @@
   >
     <h3 class="mb-8 text-3xl bg-error text-white p-2 mt-4">Error!</h3>
     <p class="text-xl">{@html msg}</p>
+    <p>For Help: Go to Permaweb Discord: <a href="https://discord.gg/anHZRRnqux">PST Support</a></p>
   </div>
 </Modal>

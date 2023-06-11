@@ -16,6 +16,7 @@
   import ErrorDialog from "../dialogs/error.svelte";
   import Loading from "../dialogs/loading.svelte";
   import stampSvg from "../assets/stamp.svg";
+  import { getPromo } from '../lib/promos.js'
 
   import { profile } from "../store.js";
   import { reject, concat, sortWith, descend, prop, takeLast } from "ramda";
@@ -46,10 +47,11 @@
     };
   }
 
+  
   function tweetLink(title, id) {
     return `https://twitter.com/intent/tweet?text=${encodeURI(
-      "🪧 STAMP\n\n" + title.replace("#", "no ") + "\n\n🐘"
-    )}&url=https://img.arweave.dev/%23/show/${id}`;
+      getPromo() + "\n\n" + title.replace("#", "no ") + "\n\n🐘"
+    )}&url=https://${globalThis.location.host}/%23/show/${id}`;
   }
 
   function connected() {

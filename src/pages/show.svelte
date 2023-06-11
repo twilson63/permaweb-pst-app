@@ -37,6 +37,8 @@
   import { getProfile } from "../lib/account.js";
   import { ArweaveWebWallet } from "arweave-wallet-connector";
   import { router } from "tinro";
+  import { getPromo } from '../lib/promos.js'
+
 
   const U = "rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk";
   const wallet = new ArweaveWebWallet();
@@ -131,8 +133,8 @@
 
   function tweetLink(title, id) {
     return `https://twitter.com/intent/tweet?text=${encodeURI(
-      "🪧 STAMP\n\n" + title.replace("#", "no ") + "\n\n🐘"
-    )}&url=https://pst.arweave.dev/%23/show/${id}`;
+      getPromo() + "\n\n" + title.replace("#", "no ") + "\n\n🐘"
+    )}&url=https://${globalThis.location.host}/%23/show/${id}`;
   }
 
   function connected() {
@@ -232,7 +234,7 @@
     } catch (e) {
       showProcessing = false;
       errorDlg = true;
-      errorMsg = e.message;
+      errorMsg = e.message + '\n\n';
     }
   }
 

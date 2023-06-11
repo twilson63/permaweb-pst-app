@@ -78,7 +78,6 @@
         }
         const result = await deploy(bundlr, asset);
 
-        deployDlg = false;
         // reset form
         document.forms[0].reset();
 
@@ -87,6 +86,8 @@
           { id: result.id, src: URL.createObjectURL(files[0]) },
         ];
         tx = result.id;
+        await new Promise(r => setTimeout(r, 15000))
+        deployDlg = false;
         confirmDlg = true;
       } catch (e) {
         console.log(e);
@@ -121,8 +122,6 @@
 
         const result = await deploy(bundlr, asset);
 
-        deployDlg = false;
-
         // reset form
         document.forms[0].reset();
 
@@ -131,6 +130,8 @@
           { id: result.id, src: URL.createObjectURL(files[0]) },
         ];
         tx = result.id;
+        await new Promise(r => setTimeout(r, 15000))
+        deployDlg = false;
         confirmDlg = true;
       } catch (e) {
         //console.log(e);
@@ -155,7 +156,7 @@
         deployDlg = true;
         const result = await deployAr(asset);
 
-        deployDlg = false;
+        
         e.target.reset();
 
         tx = result.id;
@@ -164,6 +165,8 @@
           { id: tx, src: URL.createObjectURL(files[0]) },
         ];
         tx = result.id;
+        await new Promise(r => setTimeout(r, 15000))
+        deployDlg = false;
         confirmDlg = true;
       } catch (e) {
         deployDlg = false;
