@@ -96,7 +96,7 @@
   async function getImages(addr) {
     try {
       showLoading = true;
-      const results = await pstsByOwner(addr);
+      const results = await pstsByOwner(addr)
       showLoading = false;
       return results;
     } catch (e) {

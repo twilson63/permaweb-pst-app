@@ -38,6 +38,8 @@
   import { ArweaveWebWallet } from "arweave-wallet-connector";
   import { router } from "tinro";
   import { getPromo } from '../lib/promos.js'
+  import SuccessDlg from '../dialogs/success.svelte'
+
 
 
   const U = "rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk";
@@ -60,6 +62,7 @@
   let showBuy = false;
   let showSell = false;
   let showProcessing = false;
+  let showSuccess = false;
 
   let address = "";
   onMount(async () => {
@@ -254,7 +257,7 @@
       ).toPromise();
       await new Promise((r) => setTimeout(r, 1000));
       showProcessing = false;
-      router.goto(`/psts/${address}`);
+      showSuccess = true;
     } catch (e) {
       showProcessing = false;
       errorDlg = true;
@@ -374,7 +377,9 @@
               <!-- if owner, then trade, if not owner, buy -->
               <div>
                 <div class="flex flex-col">
-                  {#if asset.items?.find((i) => i.type === "sponsor" && i.id === address && i.percent > 0)}
+                  {#if address === ""}
+                    <div class="border-2 px-2">Not for Sale</div>
+                  {:else if asset.items?.find((i) => i.type === "sponsor" && i.id === address && i.percent > 0)}
                     <button
                       class="btn btn-outline btn-sm rounded-none"
                       on:click={() => (showSell = true)}>Trade</button
@@ -384,6 +389,8 @@
                       class="btn btn-outline btn-sm rounded-none"
                       on:click={() => (showBuy = true)}>Buy</button
                     >
+                  {:else}
+                    <div class="border-2 px-2">Not for Sale</div>
                   {/if}
                 </div>
               </div>
@@ -429,6 +436,10 @@
   </main>
   <Sell bind:open={showSell} bind:data={assetData} on:submit={listAsset} />
   <Buy bind:open={showBuy} bind:data={assetData} on:click={purchaseAsset} />
+  <SuccessDlg bind:open={showSuccess} on:click={() => {
+    globalThis.location.href = tweetLink(assetData.title, id)
+    showSuccess = false
+  }} />
 {:catch e}
   <div class="alert alert-error">
     <h2 class="text-3xl">{e.message}</h2>
@@ -448,3 +459,4 @@
 />
 <WalletHelp bind:open={showHelp} />
 <Processing bind:open={showProcessing} />
+
