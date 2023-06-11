@@ -174,13 +174,14 @@
     );
 
     assetData = await getAssetData(id);
-
+    
     // get trade info and append to assetData
     tradeData = await getTradeData(
       { readState: services.readState },
       id
     ).toPromise();
 
+    
     assetData = {
       id,
       src,
@@ -194,7 +195,7 @@
       u: tradeData.price / 1e6,
       percent: 100,
     };
-    console.log({ assetData });
+    
     return assetData;
   }
 
@@ -473,7 +474,7 @@
     showSuccess = false
   }} />
 {:catch e}
-  <div class="alert alert-error">
+  <div class="alert alert-error flex-col">
     <p class="mb-8">Looks there was an error trying to access this asset. It can take a few minutes to register on the index.</p>
     <h2 class="text-3xl">{e.message}</h2>
   </div>

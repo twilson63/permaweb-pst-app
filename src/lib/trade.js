@@ -6,10 +6,13 @@ export function getTradeData(env, contract) {
   return of(contract)
     .chain(readState)
     .map(path(["cachedValue", "state"]))
+    
     .map((c) => ({ c, contractId: contract }))
     .map(getTotal)
     .map(getSponsors)
+    .map(x => (console.log(x), x))
     .map(getOrders)
+
     .map(getPrice);
 }
 
@@ -100,6 +103,9 @@ export function buy(env, contract, qty) {
 /** helper functions */
 
 function getPrice(ctx) {
+  if (!ctx.c.pairs) {
+    return { ...ctx, price: 0 }
+  }
   if (ctx.c.pairs?.length < 1) {
     return { ...ctx, price: 1000 };
   }
@@ -139,6 +145,9 @@ function getSponsors({ c, total, contractId }) {
 }
 
 function getOrders({ c, items, total }) {
+  if (!c.pairs) {
+    return { c, items };
+  }
   if (c.pairs.length === 0) {
     return { c, items };
   }
