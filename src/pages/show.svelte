@@ -337,6 +337,37 @@
           <div class="mt-4">
             <div class="flex justify-between">
               <div>
+                <div class="mb-2 uppercase">Owners</div>
+                {#each asset.items.filter(i => i.type === 'sponsor') as sponsor}
+                {#if Number(sponsor.percent) > 2}
+                  {#await getProfile(sponsor.id) then profile}
+                  <div class="flex items-center space-x-2">
+                    <img
+                      class="mask mask-circle h-[35px] w-[35px]"
+                      src={profile.profile.avatarURL}
+                      alt="avatar"
+                    />
+                  
+                    {#if profile.profile.handleName === ""}
+                    
+                    <div>
+                      <a class="link" href="/psts/{sponsor.id}">{take(5, sponsor.id) + "-" + takeLast(5, sponsor.id)}</a>
+                    </div>
+                    
+                    {:else}
+                    <div>
+                      <a class="link" href="/psts/{sponsor.id}">{profile.profile.handleName}</a></div>
+                    {/if}
+                  </div>
+                  {/await}
+                {/if}
+                {/each}
+              </div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="flex justify-between">
+              <div>
                 <div class="mb-2 uppercase">Creator</div>
                 {#await getProfile(asset.owner) then creator}
                   <div class="flex items-center space-x-2">
