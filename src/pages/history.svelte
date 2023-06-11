@@ -35,7 +35,7 @@
   let showError = false;
   let showLoading = false;
   let errorMessage = "An Error Occuried!";
-  let server = import.meta.env.PROD ? 'https://arweave.net' : `https://${takeLast(2, globalThis.location.host.split('.')).join('.')}`
+  let server = import.meta.env.DEV ? 'https://arweave.net' : `https://${takeLast(2, globalThis.location.host.split('.')).join('.')}`
 
   function handleCopy(id) {
     items[id] = false;
