@@ -347,10 +347,11 @@
                     />
                     {#if creator.profile.handleName === ""}
                       <div>
-                        {take(5, asset.owner) + "-" + takeLast(5, asset.owner)}
+                        <a class="link" href="/psts/{asset.owner}">{take(5, asset.owner) + "-" + takeLast(5, asset.owner)}</a>
                       </div>
                     {:else}
-                      <div>{creator.profile.handleName}</div>
+                      <div>
+                        <a class="link" href="/psts/{asset.owner}">{creator.profile.handleName}</a></div>
                     {/if}
                   </div>
                 {/await}
@@ -442,6 +443,7 @@
   }} />
 {:catch e}
   <div class="alert alert-error">
+    <p class="mb-8">Looks there was an error trying to access this asset. It can take a few minutes to register on the index.</p>
     <h2 class="text-3xl">{e.message}</h2>
   </div>
 {/await}

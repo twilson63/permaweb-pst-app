@@ -86,7 +86,8 @@
           { id: result.id, src: URL.createObjectURL(files[0]) },
         ];
         tx = result.id;
-        await new Promise(r => setTimeout(r, 15000))
+
+        files = []
         deployDlg = false;
         confirmDlg = true;
       } catch (e) {
@@ -130,7 +131,7 @@
           { id: result.id, src: URL.createObjectURL(files[0]) },
         ];
         tx = result.id;
-        await new Promise(r => setTimeout(r, 15000))
+        files = []
         deployDlg = false;
         confirmDlg = true;
       } catch (e) {
@@ -165,7 +166,7 @@
           { id: tx, src: URL.createObjectURL(files[0]) },
         ];
         tx = result.id;
-        await new Promise(r => setTimeout(r, 15000))
+        files = []
         deployDlg = false;
         confirmDlg = true;
       } catch (e) {

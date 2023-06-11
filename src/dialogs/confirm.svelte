@@ -8,7 +8,7 @@
   const dispatch = createEventDispatcher();
 </script>
 
-<Modal {open} on:cancel={() => dispatch("cancel")}>
+<Modal {open} on:cancel={() => open = false}>
   <div
     class="m-4 border-4 border-success pb-8 px-2 flex flex-col items-center justify-center"
   >
@@ -20,6 +20,6 @@
       to show up on the network.
     </blockquote>
     -->
-    <a href="/show/{tx}" class="link">View Atomic TX</a>
+    <!-- <a href="/show/{tx}" class="link">View Atomic TX</a>-->
   </div>
 </Modal>

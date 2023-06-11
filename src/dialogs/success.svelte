@@ -5,7 +5,7 @@
   
   </script>
   
-  <Modal {open} on:cancel={() => dispatch("cancel")}>
+  <Modal {open} on:cancel={() => open = false}>
     <div
       class="m-4 border-4 border-success pb-8 px-2 flex flex-col items-center justify-center"
     >
