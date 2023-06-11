@@ -14,10 +14,12 @@ import {
 } from "ramda";
 import Stamps from "@permaweb/stampjs";
 
+const server = import.meta.env.DEV
+  ? "arweave.net"
+  : takeLast(2, globalThis.location.host.split(".")).join(".")
+
 const arweave = Arweave.init({
-  host: import.meta.env.DEV
-    ? "arweave.net"
-    : takeLast(2, globalThis.location.host.split(".")).join("."),
+  host: server,
   port: 443,
   protocol: "https",
 });
@@ -25,7 +27,7 @@ const arweave = Arweave.init({
 
 const warp = WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true });
 const DRE = "https://dre-1.warp.cc";
-const stamps = Stamps.init({ warp });
+const stamps = Stamps.init({ warp, arweave });
 
 const STAMPCOIN = __STAMP_CONTRACT__;
 let data = null;

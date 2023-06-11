@@ -13,7 +13,7 @@
   import WalletHelp from "../dialogs/wallet-help.svelte";
   import Sell from "../dialogs/sell.svelte";
   import Buy from "../dialogs/buy.svelte";
-  import stampSvg from '../assets/stamp.svg'
+  import stampSvg from "../assets/stamp.svg";
   import {
     compose,
     take,
@@ -43,6 +43,9 @@
   wallet.setUrl("arweave.app");
 
   export let id;
+  let server = import.meta.env.DEV
+    ? "https://arweave.net"
+    : `https://${takeLast(2, globalThis.location.host.split(".")).join(".")}`;
   let server = import.meta.env.DEV ? 'https://arweave.net' : `https://${takeLast(2, globalThis.location.host.split('.')).join('.')}`
 
   let src = "https://placehold.co/400";
@@ -187,14 +190,17 @@
       u: tradeData.price / 1e6,
       percent: 100,
     };
-    console.log({assetData})
+    console.log({ assetData });
     return assetData;
   }
 
   async function purchaseAsset() {
     let address;
     if (window.arweaveWallet) {
-      await window.arweaveWallet.connect(["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"], {name: 'PST'});
+      await window.arweaveWallet.connect(
+        ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
+        { name: "PST" }
+      );
       address = await window.arweaveWallet.getActiveAddress();
     } else {
       await wallet.connect();
@@ -224,7 +230,6 @@
       ).toPromise();
       showProcessing = false;
       // Do tweet on purchase
-
     } catch (e) {
       showProcessing = false;
       errorDlg = true;
@@ -248,7 +253,7 @@
       ).toPromise();
       await new Promise((r) => setTimeout(r, 1000));
       showProcessing = false;
-      router.goto(`/psts/${address}`)
+      router.goto(`/psts/${address}`);
     } catch (e) {
       showProcessing = false;
       errorDlg = true;
@@ -308,11 +313,7 @@
             class="mt-4 btn btn-block rounded-none"
           >
             <span class="text-xl font-normal">STAMP</span>
-            <img
-              class="ml-4 h-8 w-8"
-              src="{stampSvg}"
-              alt="stamp-logo"
-            />
+            <img class="ml-4 h-8 w-8" src={stampSvg} alt="stamp-logo" />
           </button>
         </div>
         <div class="w-[325px] md:w-1/2 px-0 mx-0 md:ml-8">
@@ -372,12 +373,12 @@
               <!-- if owner, then trade, if not owner, buy -->
               <div>
                 <div class="flex flex-col">
-                  {#if asset.items?.find(i => i.type === "sponsor" && i.id === address && i.percent > 0)}
+                  {#if asset.items?.find((i) => i.type === "sponsor" && i.id === address && i.percent > 0)}
                     <button
                       class="btn btn-outline btn-sm rounded-none"
                       on:click={() => (showSell = true)}>Trade</button
                     >
-                  {:else if asset.items.find(i => i.type === "order")}
+                  {:else if asset.items.find((i) => i.type === "order")}
                     <button
                       class="btn btn-outline btn-sm rounded-none"
                       on:click={() => (showBuy = true)}>Buy</button
@@ -403,13 +404,22 @@
               >
             </div>
             <div class="hidden md:block">
-              Link: <a class="link" href="{server}/{id}" target="_blank">{id}</a>
+              Link: <a class="link" href="{server}/{id}" target="_blank">{id}</a
+              >
             </div>
             <div class="hidden md:block">
-              see: <a class="link" href="https://viewblock.io/arweave/tx/{id}" target="_blank">viewblock</a>
+              see: <a
+                class="link"
+                href="https://viewblock.io/arweave/tx/{id}"
+                target="_blank">viewblock</a
+              >
             </div>
             <div class="hidden md:block">
-              see: <a class="link" href="https://sonar.warp.cc/#/app/contract/{id}" target="_blank">sonar</a>
+              see: <a
+                class="link"
+                href="https://sonar.warp.cc/#/app/contract/{id}"
+                target="_blank">sonar</a
+              >
             </div>
           </div>
         </div>
