@@ -37,10 +37,8 @@
   import { getProfile } from "../lib/account.js";
   import { ArweaveWebWallet } from "arweave-wallet-connector";
   import { router } from "tinro";
-  import { getPromo } from '../lib/promos.js'
-  import SuccessDlg from '../dialogs/success.svelte'
-
-
+  import { getPromo } from "../lib/promos.js";
+  import SuccessDlg from "../dialogs/success.svelte";
 
   const U = "rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk";
   const wallet = new ArweaveWebWallet();
@@ -50,7 +48,7 @@
   let server = import.meta.env.DEV
     ? "https://arweave.net"
     : `https://${takeLast(2, globalThis.location.host.split(".")).join(".")}`;
-  
+
   let src = "https://placehold.co/400";
   let imageMsg = "";
   let stampDlg = false;
@@ -174,14 +172,13 @@
     );
 
     assetData = await getAssetData(id);
-    
+
     // get trade info and append to assetData
     tradeData = await getTradeData(
       { readState: services.readState },
       id
     ).toPromise();
 
-    
     assetData = {
       id,
       src,
@@ -195,7 +192,7 @@
       u: tradeData.price / 1e6,
       percent: 100,
     };
-    
+
     return assetData;
   }
 
@@ -238,7 +235,7 @@
     } catch (e) {
       showProcessing = false;
       errorDlg = true;
-      errorMsg = e.message + '\n\n';
+      errorMsg = e.message + "\n\n";
     }
   }
 
@@ -339,29 +336,34 @@
             <div class="flex justify-between">
               <div>
                 <div class="mb-2 uppercase">Owners</div>
-                {#each asset.items.filter(i => i.type === 'sponsor') as sponsor}
-                {#if Number(sponsor.percent) > 2}
-                  {#await getProfile(sponsor.id) then profile}
-                  <div class="flex items-center space-x-2">
-                    <img
-                      class="mask mask-circle h-[35px] w-[35px]"
-                      src={profile.profile.avatarURL}
-                      alt="avatar"
-                    />
-                  
-                    {#if profile.profile.handleName === ""}
-                    
-                    <div>
-                      <a class="link" href="/psts/{sponsor.id}">{take(5, sponsor.id) + "-" + takeLast(5, sponsor.id)}</a>
-                    </div>
-                    
-                    {:else}
-                    <div>
-                      <a class="link" href="/psts/{sponsor.id}">{profile.profile.handleName}</a></div>
-                    {/if}
-                  </div>
-                  {/await}
-                {/if}
+                {#each asset.items.filter((i) => i.type === "sponsor") as sponsor}
+                  {#if Number(sponsor.percent) > 2}
+                    {#await getProfile(sponsor.id) then profile}
+                      <div class="flex items-center space-x-2">
+                        <img
+                          class="mask mask-circle h-[35px] w-[35px]"
+                          src={profile.profile.avatarURL}
+                          alt="avatar"
+                        />
+
+                        {#if profile.profile.handleName === ""}
+                          <div>
+                            <a class="link" href="/psts/{sponsor.id}"
+                              >{take(5, sponsor.id) +
+                                "-" +
+                                takeLast(5, sponsor.id)}</a
+                            >
+                          </div>
+                        {:else}
+                          <div>
+                            <a class="link" href="/psts/{sponsor.id}"
+                              >{profile.profile.handleName}</a
+                            >
+                          </div>
+                        {/if}
+                      </div>
+                    {/await}
+                  {/if}
                 {/each}
               </div>
             </div>
@@ -379,11 +381,18 @@
                     />
                     {#if creator.profile.handleName === ""}
                       <div>
-                        <a class="link" href="/psts/{asset.owner}">{take(5, asset.owner) + "-" + takeLast(5, asset.owner)}</a>
+                        <a class="link" href="/psts/{asset.owner}"
+                          >{take(5, asset.owner) +
+                            "-" +
+                            takeLast(5, asset.owner)}</a
+                        >
                       </div>
                     {:else}
                       <div>
-                        <a class="link" href="/psts/{asset.owner}">{creator.profile.handleName}</a></div>
+                        <a class="link" href="/psts/{asset.owner}"
+                          >{creator.profile.handleName}</a
+                        >
+                      </div>
                     {/if}
                   </div>
                 {/await}
@@ -410,9 +419,7 @@
               <!-- if owner, then trade, if not owner, buy -->
               <div>
                 <div class="flex flex-col">
-                  {#if address === ""}
-                    <div class="border-2 px-2">Not for Sale</div>
-                  {:else if asset.items?.find((i) => i.type === "sponsor" && i.id === address && i.percent > 0)}
+                  {#if asset.items?.find((i) => i.type === "sponsor" && i.id === address && i.percent > 0)}
                     <button
                       class="btn btn-outline btn-sm rounded-none"
                       on:click={() => (showSell = true)}>Trade</button
@@ -469,13 +476,19 @@
   </main>
   <Sell bind:open={showSell} bind:data={assetData} on:submit={listAsset} />
   <Buy bind:open={showBuy} bind:data={assetData} on:click={purchaseAsset} />
-  <SuccessDlg bind:open={showSuccess} on:click={() => {
-    globalThis.location.href = tweetLink(assetData.title, id)
-    showSuccess = false
-  }} />
+  <SuccessDlg
+    bind:open={showSuccess}
+    on:click={() => {
+      globalThis.location.href = tweetLink(assetData.title, id);
+      showSuccess = false;
+    }}
+  />
 {:catch e}
   <div class="alert alert-error flex-col">
-    <p class="mb-8">Looks there was an error trying to access this asset. It can take a few minutes to register on the index.</p>
+    <p class="mb-8">
+      Looks there was an error trying to access this asset. It can take a few
+      minutes to register on the index.
+    </p>
     <h2 class="text-3xl">{e.message}</h2>
   </div>
 {/await}
@@ -493,4 +506,3 @@
 />
 <WalletHelp bind:open={showHelp} />
 <Processing bind:open={showProcessing} />
-
