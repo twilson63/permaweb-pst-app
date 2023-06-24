@@ -1,6 +1,13 @@
 import { of, fromPromise } from "hyper-async";
 import { assoc, __, prop, path } from "ramda";
 
+export function getBalance(env, contract, target) {
+  const readState = fromPromise(env.readState);
+  return of(contract)
+    .chain(readState)
+    .map(path(["cachedValue", "state", "balances", target]))
+}
+
 export function getTradeData(env, contract) {
   const readState = fromPromise(env.readState);
   return of(contract)
@@ -88,7 +95,9 @@ export function buy(env, contract, qty) {
         function: "allow",
         target: ctx.contract,
         qty: ctx.qty,
-      }).map((result) => assoc("transaction", result.originalTxId, ctx))
+      }, { strict: true})
+      .map(x => (console.log('ALLOW RESULT', x), x))
+      .map((result) => assoc("transaction", result.originalTxId, ctx))
     )
     .chain((ctx) =>
       write(ctx.contract, {
@@ -152,7 +161,7 @@ function getOrders({ c, items, total }) {
     return { c, items };
   }
   const pair = c.pairs.find((p) =>
-    p.pair.includes("rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk")
+    p.pair.includes(__BAR_CONTRACT__)
   );
   if (!pair) {
     return { c, items };

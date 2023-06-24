@@ -1,9 +1,8 @@
 <script>
   import Navbar from "../components/navbar.svelte";
   import { getAssetData } from "../lib/asset.js";
-  import { getTradeData } from "../lib/trade.js";
+  import { getTradeData, getBalance, sell, buy } from "../lib/trade.js";
   import services from "../services/index.js";
-  import { sell, buy } from "../lib/trade.js";
   import { atomicToStamp } from "../lib/utils.js";
   import Construction from "../dialogs/construction.svelte";
   import Stamping from "../dialogs/stamping.svelte";
@@ -40,7 +39,7 @@
   import { getPromo } from "../lib/promos.js";
   import SuccessDlg from "../dialogs/success.svelte";
 
-  const U = "rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk";
+  const U = __BAR_CONTRACT__;
   const wallet = new ArweaveWebWallet();
   wallet.setUrl("arweave.app");
 
@@ -208,22 +207,28 @@
       await wallet.connect();
       address = wallet.address;
     }
+    let purchasePrice = 0;
+    try {
+      purchasePrice =
+        assetData.items.find((i) => i.type === "order")?.price || 0;
 
-    const uBalance = await fetch(
-      "https://dre-6.warp.cc/contract/?id=rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk&query=$.balances." +
-        address
-    )
-      .then((r) => r.json())
-      .then((r) => r.result[0] || 0);
+      const uBalance = await getBalance(services, U, address).toPromise();
+      if (uBalance < purchasePrice) {
+        showBuy = false;
+        errorDlg = true;
+        errorMsg = "Not enough U to purchase!" + "\n\n";
+        return;
+      }
 
-    if (uBalance < assetData.price) {
-      alert("Not enough U to purchase!");
+      showBuy = false;
+      showProcessing = true;
+    } catch (e) {
+      showProcessing = false;
+      errorDlg = true;
+      errorMsg = e.message + "\n\n";
       return;
     }
-    showBuy = false;
-    showProcessing = true;
-    let purchasePrice =
-      assetData.items.find((i) => i.type === "order")?.price || 0;
+
     try {
       const result = await buy(
         { ...services, RebAR: U },
@@ -253,7 +258,7 @@
         assetData.percent,
         Number(assetData.u)
       ).toPromise();
-      await new Promise((r) => setTimeout(r, 1000));
+
       showProcessing = false;
       showSuccess = true;
     } catch (e) {

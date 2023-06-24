@@ -13,7 +13,7 @@ export default defineConfig({
   base: '',
   define: {
     __STAMP_CONTRACT__: '"TlqASNDLA1Uh8yFiH-BzR_1FDag4s735F3PoUFEv2Mo"',
-    __BAR_CONTRACT__: '"rO8f4nTVarU6OtU2284C8-BIH6HscNd-srhWznUllTk"',
+    __BAR_CONTRACT__: '"KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw"',
     __ASSET_SOURCE__: '"j9Lk3cTmukZS2-hae9GYxK1CuHtWtHcA1V5-tkIfu5k"'
   },
   plugins: [svelte()],
