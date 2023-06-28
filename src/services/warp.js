@@ -7,7 +7,8 @@ const options = {
   allowBigInt: true,
   internalWrites: true,
   unsafeClient: "skip",
-  //remoteStateSyncEnabled: true
+  remoteStateSyncEnabled: true,
+  remoteStateSyncSource: 'https://dre-6.warp.cc'
 };
 
 export const readState = (id) =>

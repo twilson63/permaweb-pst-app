@@ -82,7 +82,7 @@
         address = wallet.address;
       }
     }
-    console.log({ address });
+    //console.log({ address });
   });
 
   let constructionDlg = false;
