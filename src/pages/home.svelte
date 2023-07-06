@@ -1,24 +1,16 @@
 <script>
-  import fileReaderStream from "https://esm.sh/filereader-stream";
-  import { split, map, trim } from "ramda";
   import { providers } from "ethers";
   import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-  import { WarpFactory } from "warp-contracts";
   import { imgCache } from "../store.js";
   import { deploy, deployAr } from "../lib/deploy.js";
-  //import { deploy, deployBundlr } from "../lib/deploy-path.js";
+
   import DeployDialog from "../dialogs/deploy.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
   import ConfirmDialog from "../dialogs/confirm.svelte";
   import Navbar from "../components/navbar.svelte";
 
-  const warp = WarpFactory.forMainnet();
-
   //import { WebBundlr } from "@bundlr-network/client";
   const WebBundlr = Bundlr.default;
-
-  const SRC = __ASSET_SOURCE__;
-  const BAR = __BAR_CONTRACT__;
 
   let files = [];
   let title = "";
@@ -33,6 +25,7 @@
   let forkTX = "";
   let audioRenderer = false;
   let thumbnail = "";
+  let sellChecked = false;
 
   function showError(msg) {
     errorMessage = msg;
@@ -87,7 +80,7 @@
         ];
         tx = result.id;
 
-        files = []
+        files = [];
         deployDlg = false;
         confirmDlg = true;
       } catch (e) {
@@ -131,7 +124,7 @@
           { id: result.id, src: URL.createObjectURL(files[0]) },
         ];
         tx = result.id;
-        files = []
+        files = [];
         deployDlg = false;
         confirmDlg = true;
       } catch (e) {
@@ -157,7 +150,6 @@
         deployDlg = true;
         const result = await deployAr(asset);
 
-        
         e.target.reset();
 
         tx = result.id;
@@ -166,7 +158,7 @@
           { id: tx, src: URL.createObjectURL(files[0]) },
         ];
         tx = result.id;
-        files = []
+        files = [];
         deployDlg = false;
         confirmDlg = true;
       } catch (e) {
@@ -215,6 +207,24 @@
                     >clear</button
                   >
                 </div>
+                <label class="label">
+                  <input type="checkbox" bind:checked={sellChecked} />
+                  <div class="flex space-x-2">
+                    List on &nbsp;
+                    <a
+                      class="link"
+                      target="_blank"
+                      href="https://bazAR.arweave.dev">BazAR</a
+                    >?
+                    {#if sellChecked}
+                      <input
+                        type="text"
+                        class="input input-bordered"
+                        placeholder="List price in U"
+                      />
+                    {/if}
+                  </div>
+                </label>
               {:else}
                 <iframe
                   class="border-2 border-secondary w-full md:w-[500px] md:h-[350px] object-contain"
@@ -307,9 +317,18 @@
                 -->
               </select>
               <label class="label text-sm text-gray-400"
-                >(when using $AR you also mint $BAR)</label
+                >(when using $AR you also mint $U)</label
               >
             </div>
+            <!--
+              l
+            <div class="form-control">
+              <label for="license" class="label">License</label>
+              <select>
+                <option></option>
+              </select>
+            </div>
+            -->
             <div class="form-control">
               <label for="fork" class="label">Forks (optional)</label>
               <input

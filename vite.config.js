@@ -14,7 +14,8 @@ export default defineConfig({
   define: {
     __STAMP_CONTRACT__: '"TlqASNDLA1Uh8yFiH-BzR_1FDag4s735F3PoUFEv2Mo"',
     __BAR_CONTRACT__: '"KTzTXT_ANmF84fWEKHzWURD1LWd9QaFR9yfYUwH2Lxw"',
-    __ASSET_SOURCE__: '"j9Lk3cTmukZS2-hae9GYxK1CuHtWtHcA1V5-tkIfu5k"'
+    __ASSET_SOURCE__: '"xi6IPpC-uqMYrU5xcgGYNxku2g-vnRwk9TnyzbjaHSY"',
+    __MARKET_CONTRACT__: '"pKAUV26rFgG13XwS7oZ1IQ8dDIRcdV9xnC8XEnZ7cfQ"'
   },
   plugins: [svelte()],
   server: {

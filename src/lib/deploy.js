@@ -1,4 +1,4 @@
-import fileReaderStream from "https://esm.sh/filereader-stream";
+import fileReaderStream from "https://esm.sh/filereader-stream?bundle";
 import { split, map, trim, append, takeLast } from "ramda";
 import { WarpFactory } from "warp-contracts";
 import { DeployPlugin } from "warp-contracts-plugin-deploy";
