@@ -334,7 +334,16 @@ export async function getAssetData(id) {
     },
     body: JSON.stringify({ query: query(id) }),
   })
+
+    // return fetch(`https://node2.bundlr.network/graphql`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ query: query(id) }),
+    // })
     .then((res) => res.json())
+    .then(x => (console.log({ x }), x))
     .then(({ data }) => ({
       title: prop(
         "value",

@@ -1,4 +1,4 @@
-import fileReaderStream from "https://esm.sh/filereader-stream?bundle";
+import fileReaderStream from "https://esm.sh/filereader-stream";
 import { split, map, trim, append, takeLast } from "ramda";
 import { WarpFactory } from "warp-contracts";
 import { DeployPlugin } from "warp-contracts-plugin-deploy";
@@ -24,7 +24,7 @@ const toArrayBuffer = (file) =>
     });
   });
 
-export async function fund() {}
+export async function fund() { }
 
 export async function deploy(bundlr, asset) {
   let assetType = asset.file.type.split("/")[0] || "image";
@@ -49,14 +49,16 @@ export async function deploy(bundlr, asset) {
       name: "Init-State",
       value: JSON.stringify({
         creator: addr,
-        pairs: [],
-        ticker: "PST",
+        claimable: [],
+        ticker: "AA",
+        name: asset.title,
         balances: {
           [addr]: 100,
         },
         emergencyHaltWallet: addr,
         contentType: asset.file.type,
         settings: [["isTradeable", true]],
+        transferable: true
       }),
     },
     { name: "Forks", value: asset.forkTX },
@@ -88,7 +90,7 @@ export async function deploy(bundlr, asset) {
 export async function deployAr(asset) {
   const data = await toArrayBuffer(asset.file);
   const addr = await window.arweaveWallet.getActiveAddress();
-  console.log(data);
+
   const tx = await arweave.createTransaction({ data });
   tx.addTag("App-Name", "SmartWeaveContract");
   tx.addTag("App-Version", "0.3.0");
@@ -98,15 +100,19 @@ export async function deployAr(asset) {
   tx.addTag(
     "Init-State",
     JSON.stringify({
+      title: asset.title,
+      description: asset.description,
       creator: addr,
-      ticker: "PST-ASSET",
+      ticker: "AA",
+      name: asset.title,
       balances: {
         [addr]: 100,
       },
       contentType: asset.file.type,
       emergencyHaltWallet: addr,
-      pairs: [],
+      claimable: [],
       settings: [["isTradeable", true]],
+      transferable: true
     })
   );
   tx.addTag("Forks", asset.forkTX);

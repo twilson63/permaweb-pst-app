@@ -325,7 +325,8 @@
             <div class="form-control">
               <label for="license" class="label">License</label>
               <select>
-                <option></option>
+                <option value="yRj4a5KMctX_uOmKWCFJIjmY8DeJcusVk6-HzLiM_t8">Universal Data License</option>
+                <option value="x5UYiin_eRB0XCpZAkpduL0JIaXAUe9Bi2-RXGloBQI">Creative Commons</option>
               </select>
             </div>
             -->
