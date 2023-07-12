@@ -328,13 +328,15 @@ query {
 }
 
 export async function getAssetData(id) {
-  
+  // if not found try to get for arweave.net/tx and it may be pending
+  // so show loading dialog, until pending is resolved --tnw
   return fetch(`https://node2.bundlr.network/graphql`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ query: `query {
+    body: JSON.stringify({
+      query: `query {
       transactions (ids: ["${id}"]) {
         edges {
           node {
@@ -360,7 +362,7 @@ export async function getAssetData(id) {
     // })
     .then((res) => res.json())
     .then(path(['data', 'transactions', 'edges', '0']))
-    .then(({node}) => {
+    .then(({ node }) => {
       const tags = node.tags.reduce((a, v) => assoc(v.name, v.value, a), {})
       return ({
         title: tags.Title,
@@ -371,8 +373,8 @@ export async function getAssetData(id) {
         timestamp: node.timestamp || null
       })
     })
-    
-  
+
+
 }
 
 function query(id) {

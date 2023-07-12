@@ -43,7 +43,7 @@ export async function deploy(bundlr, asset) {
 
   let _tags = [
     { name: "Content-Type", value: asset.file.type },
-    { name: "License", value: UDL},
+    { name: "License", value: UDL },
     { name: "App-Name", value: "SmartWeaveContract" },
     { name: "App-Version", value: "0.3.0" },
     { name: "Contract-Src", value: SRC },
@@ -72,12 +72,12 @@ export async function deploy(bundlr, asset) {
     ...topicData,
   ];
   if (asset.license === 'derivative') {
-    _tags = append({name: 'Derivation', value: 'Allowed-With-Credit'})
+    _tags = append({ name: 'Derivation', value: 'Allowed-With-Credit' })
   }
   if (asset.license === 'commercial') {
     _tags = _tags.concat([
-      {name: 'Commercial-Use', value: 'Allowed'},
-      {name: 'License-Fee', value: 'One-Time-' + asset.payment}
+      { name: 'Commercial-Use', value: 'Allowed' },
+      { name: 'License-Fee', value: 'One-Time-' + asset.payment }
     ])
   }
   if (asset.audioRenderer) {
@@ -106,7 +106,7 @@ export async function deployAr(asset) {
   tx.addTag("App-Name", "SmartWeaveContract");
   tx.addTag("App-Version", "0.3.0");
   tx.addTag("Content-Type", asset.file.type);
-
+  tx.addTag('License', UDL)
   tx.addTag("Contract-Src", SRC);
   tx.addTag(
     "Init-State",
@@ -141,6 +141,13 @@ export async function deployAr(asset) {
     tx.addTag("Topic:" + t, t);
   });
 
+  if (asset.license === 'derivative') {
+    tx.addTag('Derivation', 'Allowed-With-Credit')
+  }
+  if (asset.license === 'commercial') {
+    tx.addTag('Commercial-Use', 'Allowed')
+    tx.addTag('License-Fee', 'One-Time-', + asset.payment)
+  }
   if (asset.audioRenderer) {
     tx.addTag("Render-With", "f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc");
   }
