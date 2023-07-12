@@ -1,7 +1,7 @@
 <script>
   import Navbar from "../components/navbar.svelte";
   import { getAssetData } from "../lib/asset.js";
-  import { getTradeData, getBalance, sell, buy } from "../lib/trade.js";
+  //import { getTradeData, getBalance, sell, buy } from "../lib/trade.js";
   import services from "../services/index.js";
   import { atomicToStamp } from "../lib/utils.js";
   import Construction from "../dialogs/construction.svelte";
@@ -10,8 +10,7 @@
   import ErrorDialog from "../dialogs/error.svelte";
   import ConnectModal from "../dialogs/connect.svelte";
   import WalletHelp from "../dialogs/wallet-help.svelte";
-  import Sell from "../dialogs/sell.svelte";
-  import Buy from "../dialogs/buy.svelte";
+
   import stampSvg from "../assets/stamp.svg";
   import {
     compose,
@@ -195,6 +194,7 @@
       percent: 100,
     };
 
+    console.log("source", assetData.src);
     return assetData;
   }
 
