@@ -3,7 +3,6 @@
   import Announcer from "./components/announcer.svelte";
   import Transition from "./components/transition.svelte";
 
-  import Start from "./pages/start.svelte";
   import Home from "./pages/home.svelte";
   import About from "./pages/about.svelte";
   import Show from "./pages/show.svelte";
@@ -18,14 +17,10 @@
 <Announcer />
 <Transition>
   <Route path="/">
-    <Start />
+    <Home />
   </Route>
   <Route path="/home">
-    {#if $profile}
-      <Home />
-    {:else}
-      <Start />
-    {/if}
+    <Home />
   </Route>
   <Route path="/about">
     <About />

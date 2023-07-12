@@ -1,7 +1,7 @@
 <script>
   import Navbar from "../components/navbar.svelte";
   import { getAssetData } from "../lib/asset.js";
-  import { getTradeData, getBalance, sell, buy } from "../lib/trade.js";
+  //import { getTradeData, getBalance, sell, buy } from "../lib/trade.js";
   import services from "../services/index.js";
   import { atomicToStamp } from "../lib/utils.js";
   import Construction from "../dialogs/construction.svelte";
@@ -10,8 +10,7 @@
   import ErrorDialog from "../dialogs/error.svelte";
   import ConnectModal from "../dialogs/connect.svelte";
   import WalletHelp from "../dialogs/wallet-help.svelte";
-  import Sell from "../dialogs/sell.svelte";
-  import Buy from "../dialogs/buy.svelte";
+
   import stampSvg from "../assets/stamp.svg";
   import {
     compose,
@@ -165,36 +164,41 @@
     if (globalThis.arweaveWallet) {
       address = await arweaveWallet.getActiveAddress();
     }
-    const sumBalance = compose(
-      reduce((acc, [k, v]) => acc + v, 0),
-      toPairs
-    );
+    // const sumBalance = compose(
+    //   reduce((acc, [k, v]) => acc + v, 0),
+    //   toPairs
+    // );
 
     assetData = await getAssetData(id);
 
     // get trade info and append to assetData
+    /*
     tradeData = await getTradeData(
       { readState: services.readState },
       id
     ).toPromise();
-
+    */
     assetData = {
       id,
       src,
       ...assetData,
-      ...tradeData,
-      sponsors: tradeData.items
-        .filter((item) => item.type === "sponsor")
-        .map((_) => 1)
-        .reduce((a, b) => a + b, 0),
+      //...tradeData,
+      sponsors: [],
+      // tradeData.items
+      //   .filter((item) => item.type === "sponsor")
+      //   .map((_) => 1)
+      //   .reduce((a, b) => a + b, 0),
       user: address,
-      u: tradeData.price / 1e6,
+      // u: tradeData.price / 1e6,
+      u: 0,
       percent: 100,
     };
 
+    console.log("source", assetData.src);
     return assetData;
   }
 
+  /*
   async function purchaseAsset() {
     let address;
     if (window.arweaveWallet) {
@@ -267,10 +271,11 @@
       errorMsg = e.message;
     }
   }
+  */
 </script>
 
 <svelte:head>
-  <title>pst</title>
+  <title>Atomic Asset Creator</title>
   <meta property="og:image" content="{location.origin}/{id}" />
   <meta property="og:url" content="{location.origin}/#/show/{id}" />
 </svelte:head>
@@ -326,18 +331,25 @@
         <div class="w-[325px] md:w-1/2 px-0 mx-0 md:ml-8">
           <div class="mb-4 px-0 mx-0 flex items-start justify-between">
             <h1 class="text-3xl">{asset.title}</h1>
-            <a
-              target="_blank"
-              href={tweetLink(asset.title, id)}
-              class="btn btn-outline btn-sm rounded-none font-normal">share</a
-            >
+            <div class="flex space-x-2">
+              <a
+                target="_blank"
+                href={tweetLink(asset.title, id)}
+                class="btn btn-outline btn-sm rounded-none font-normal">share</a
+              >
+              <a
+                target="_blank"
+                href={`https://bazar.arweave.dev/#/asset/${id}`}
+                class="btn btn-outline btn-sm rounded-none font-normal">BazAR</a
+              >
+            </div>
           </div>
           <div class="text-sm">Description</div>
           <p class="text-xl">{asset.description}</p>
-          {#if asset.topics.length > 0}
+          {#if asset.topics.length > 0 && asset.topics[0].length > 0}
             <p class="mt-4 text-sm">Topics: {asset.topics.join(", ")}</p>
           {/if}
-          <div class="mt-4">
+          <!-- <div class="mt-4">
             <div class="flex justify-between">
               <div>
                 <div class="mb-2 uppercase">Owners</div>
@@ -372,7 +384,7 @@
                 {/each}
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="mt-4">
             <div class="flex justify-between">
               <div>
@@ -422,7 +434,7 @@
                 </div>
               </div>
               <!-- if owner, then trade, if not owner, buy -->
-              <div>
+              <!-- <div>
                 <div class="flex flex-col">
                   {#if asset.items?.find((i) => i.type === "sponsor" && i.id === address && i.percent > 0)}
                     <button
@@ -438,7 +450,7 @@
                     <div class="border-2 px-2">Not for Sale</div>
                   {/if}
                 </div>
-              </div>
+              </div> -->
               <!-- <div>
                 <div class="flex flex-col">
                   <div class="uppercase">Rewards</div>
@@ -479,8 +491,8 @@
       </div>
     </section>
   </main>
-  <Sell bind:open={showSell} bind:data={assetData} on:submit={listAsset} />
-  <Buy bind:open={showBuy} bind:data={assetData} on:click={purchaseAsset} />
+  <!-- <Sell bind:open={showSell} bind:data={assetData} on:submit={listAsset} />
+  <Buy bind:open={showBuy} bind:data={assetData} on:click={purchaseAsset} /> -->
   <SuccessDlg
     bind:open={showSuccess}
     on:click={() => {

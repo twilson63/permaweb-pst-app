@@ -12,6 +12,7 @@ const arweave = Arweave.init({
 });
 
 const SRC = __ASSET_SOURCE__;
+const UDL = "yRj4a5KMctX_uOmKWCFJIjmY8DeJcusVk6-HzLiM_t8";
 
 const warp = WarpFactory.forMainnet().use(new DeployPlugin());
 
@@ -24,7 +25,7 @@ const toArrayBuffer = (file) =>
     });
   });
 
-export async function fund() {}
+export async function fund() { }
 
 export async function deploy(bundlr, asset) {
   let assetType = asset.file.type.split("/")[0] || "image";
@@ -42,6 +43,7 @@ export async function deploy(bundlr, asset) {
 
   let _tags = [
     { name: "Content-Type", value: asset.file.type },
+    { name: "License", value: UDL},
     { name: "App-Name", value: "SmartWeaveContract" },
     { name: "App-Version", value: "0.3.0" },
     { name: "Contract-Src", value: SRC },
@@ -49,14 +51,16 @@ export async function deploy(bundlr, asset) {
       name: "Init-State",
       value: JSON.stringify({
         creator: addr,
-        pairs: [],
-        ticker: "PST",
+        claimable: [],
+        ticker: "AA",
+        name: asset.title,
         balances: {
           [addr]: 100,
         },
         emergencyHaltWallet: addr,
         contentType: asset.file.type,
         settings: [["isTradeable", true]],
+        transferable: true
       }),
     },
     { name: "Forks", value: asset.forkTX },
@@ -67,6 +71,15 @@ export async function deploy(bundlr, asset) {
     { name: "Thumbnail", value: asset.thumbnail },
     ...topicData,
   ];
+  if (asset.license === 'derivative') {
+    _tags = append({name: 'Derivation', value: 'Allowed-With-Credit'})
+  }
+  if (asset.license === 'commercial') {
+    _tags = _tags.concat([
+      {name: 'Commercial-Use', value: 'Allowed'},
+      {name: 'License-Fee', value: 'One-Time-' + asset.payment}
+    ])
+  }
   if (asset.audioRenderer) {
     _tags = append(
       {
@@ -88,7 +101,7 @@ export async function deploy(bundlr, asset) {
 export async function deployAr(asset) {
   const data = await toArrayBuffer(asset.file);
   const addr = await window.arweaveWallet.getActiveAddress();
-  console.log(data);
+
   const tx = await arweave.createTransaction({ data });
   tx.addTag("App-Name", "SmartWeaveContract");
   tx.addTag("App-Version", "0.3.0");
@@ -98,15 +111,19 @@ export async function deployAr(asset) {
   tx.addTag(
     "Init-State",
     JSON.stringify({
+      title: asset.title,
+      description: asset.description,
       creator: addr,
-      ticker: "PST-ASSET",
+      ticker: "AA",
+      name: asset.title,
       balances: {
         [addr]: 100,
       },
       contentType: asset.file.type,
       emergencyHaltWallet: addr,
-      pairs: [],
+      claimable: [],
       settings: [["isTradeable", true]],
+      transferable: true
     })
   );
   tx.addTag("Forks", asset.forkTX);

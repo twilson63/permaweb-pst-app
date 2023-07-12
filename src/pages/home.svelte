@@ -1,24 +1,20 @@
 <script>
-  import fileReaderStream from "https://esm.sh/filereader-stream";
-  import { split, map, trim } from "ramda";
+  import { onMount } from "svelte";
+  import { ArweaveWebWallet } from "arweave-wallet-connector";
+  import Infotip from "../components/info-tip.svelte";
   import { providers } from "ethers";
   import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-  import { WarpFactory } from "warp-contracts";
   import { imgCache } from "../store.js";
   import { deploy, deployAr } from "../lib/deploy.js";
-  //import { deploy, deployBundlr } from "../lib/deploy-path.js";
+
+  import { profile } from "../store.js";
   import DeployDialog from "../dialogs/deploy.svelte";
   import ErrorDialog from "../dialogs/error.svelte";
   import ConfirmDialog from "../dialogs/confirm.svelte";
   import Navbar from "../components/navbar.svelte";
 
-  const warp = WarpFactory.forMainnet();
-
   //import { WebBundlr } from "@bundlr-network/client";
   const WebBundlr = Bundlr.default;
-
-  const SRC = __ASSET_SOURCE__;
-  const BAR = __BAR_CONTRACT__;
 
   let files = [];
   let title = "";
@@ -33,6 +29,37 @@
   let forkTX = "";
   let audioRenderer = false;
   let thumbnail = "";
+  let sellChecked = false;
+  let licenseTip = `choose a license for your atomic asset
+  Default Public Use - allows anyone to copy and distribue
+  Commercial Use - requires users to pay for commercial use
+  Derivative Works - allow but users must credit source`;
+  let license = "";
+  let payment = "0.01";
+
+  onMount(async () => {
+    try {
+      await new Promise((r) => setTimeout(r, 500));
+      if (window.arweaveWallet) {
+        await window.arweaveWallet.connect(
+          ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
+          { name: "Atomic Asset Creator" }
+        );
+        const addr = await window.arweaveWallet.getActiveAddress();
+        $profile = { addr };
+      } else {
+        const wallet = new ArweaveWebWallet({
+          name: "Atomic Asset Creator",
+        });
+        wallet.setUrl("arweave.app");
+        await wallet.connect();
+        const addr = await window.arweaveWallet.getActiveAddress();
+        $profile = { addr };
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
 
   function showError(msg) {
     errorMessage = msg;
@@ -48,7 +75,10 @@
       topics,
       audioRenderer,
       thumbnail,
+      licenseType: license,
+      payment: payment,
     };
+
     if (currency === "matic") {
       if (!window.ethereum) {
         showError("Metamask is required!");
@@ -87,7 +117,7 @@
         ];
         tx = result.id;
 
-        files = []
+        files = [];
         deployDlg = false;
         confirmDlg = true;
       } catch (e) {
@@ -131,7 +161,7 @@
           { id: result.id, src: URL.createObjectURL(files[0]) },
         ];
         tx = result.id;
-        files = []
+        files = [];
         deployDlg = false;
         confirmDlg = true;
       } catch (e) {
@@ -157,7 +187,6 @@
         deployDlg = true;
         const result = await deployAr(asset);
 
-        
         e.target.reset();
 
         tx = result.id;
@@ -166,7 +195,7 @@
           { id: tx, src: URL.createObjectURL(files[0]) },
         ];
         tx = result.id;
-        files = []
+        files = [];
         deployDlg = false;
         confirmDlg = true;
       } catch (e) {
@@ -255,8 +284,6 @@
                 </p>
               </div>
             {/if}
-          </div>
-          <div>
             <div class="form-control">
               <label for="title" class="label" required>Title *</label>
               <input
@@ -267,14 +294,15 @@
               />
             </div>
             <div class="form-control">
-              <label for="desc" class="label">Description</label>
+              <label for="desc" class="label">Description *</label>
               <textarea
                 id="desc"
                 class="textarea textarea-bordered"
                 bind:value={description}
               />
             </div>
-            <div class="form-control">
+
+            <!-- <div class="form-control">
               <label for="thumbnail" class="label">Thumbnail (TX_ID)</label>
               <input
                 type="text"
@@ -282,7 +310,7 @@
                 class="textarea textarea-bordered"
                 bind:value={thumbnail}
               />
-            </div>
+            </div> -->
             <div class="form-control">
               <label for="topics" class="label">Topics</label>
               <input
@@ -295,6 +323,8 @@
                 etc)</label
               >
             </div>
+          </div>
+          <div>
             <div class="form-control">
               <label for="currency" class="label">Currency *</label>
               <select class="select select-bordered" bind:value={currency}>
@@ -307,9 +337,58 @@
                 -->
               </select>
               <label class="label text-sm text-gray-400"
-                >(when using $AR you also mint $BAR)</label
+                >(when using $AR you also mint $U)</label
               >
             </div>
+            <div class="form-control">
+              <label for="license" class="label"
+                >License <Infotip tip={licenseTip} /></label
+              >
+              <select class="select select-bordered" bind:value={license}>
+                <option value="default">Default Public Use License</option>
+
+                <option value="commercial"
+                  >Commercial Use - One Time Payment</option
+                >
+                <option value="derivative"
+                  >Derivative Works - Allow with Credit</option
+                >
+                <!--
+                <option value="advanced">Advanced License</option>
+                -->
+              </select>
+            </div>
+            {#if license === "commercial"}
+              <div class="form-control">
+                <label for="payment" class="label">Payment</label>
+                <input
+                  bind:value={payment}
+                  type="text"
+                  id="payment"
+                  class="input input-bordered"
+                />
+              </div>
+            {/if}
+            {#if license === "advanced"}
+              <div class="form-control mt-2">
+                <input
+                  type="text"
+                  id="key"
+                  class="input input-bordered"
+                  placeholder="key"
+                />
+              </div>
+              <div class="form-control">
+                <input
+                  type="text"
+                  id="key"
+                  class="input input-bordered"
+                  placeholder="value"
+                />
+              </div>
+              <button class="btn btn-block mt-2">Add Tag</button>
+            {/if}
+            <!--
             <div class="form-control">
               <label for="fork" class="label">Forks (optional)</label>
               <input
@@ -318,6 +397,7 @@
                 bind:value={forkTX}
               />
             </div>
+            -->
             {#if files[0] && files[0].type && files[0].type.split("/")[0] === "audio"}
               <div class="form-control">
                 <label class="label">
