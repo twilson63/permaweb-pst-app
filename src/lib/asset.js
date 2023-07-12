@@ -1,4 +1,5 @@
 import {
+  assoc,
   take,
   compose,
   prop,
@@ -327,40 +328,43 @@ query {
 }
 
 export async function getAssetData(id) {
-  return fetch(`https://${server}/graphql`, {
+  
+  return fetch(`https://node2.bundlr.network/graphql`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify({ query: query(id) }),
+    body: JSON.stringify({ query: `query {
+      transactions (ids: ["${id}"]) {
+        edges {
+          node {
+            id
+            address
+            tags {
+              name
+              value
+            }   
+            timestamp
+        }
+      }
+      }
+    }`})
   })
     .then((res) => res.json())
-    .then(({ data }) => ({
-      title: prop(
-        "value",
-        find(propEq("name", "Title"), data.transaction.tags)
-      ),
-      description: prop(
-        "value",
-        find(propEq("name", "Description"), data.transaction.tags)
-      ),
-      type: prop("value", find(propEq("name", "Type"), data.transaction.tags)),
-      topics: pluck(
-        "value",
-        filter((t) => t.name.includes("Topic:"), data.transaction.tags)
-      ),
-      owner:
-        prop("value", find(propEq("name", "Creator"), data.transaction.tags)) ||
-        data.transaction.owner.address,
-      renderWith:
-        prop(
-          "value",
-          find(propEq("name", "Render-With"), data.transaction.tags)
-        ) || null,
-      timestamp: data.transaction?.block?.timestamp || Date.now() / 1000,
-    }));
-  //.then(x => (console.log('data', x), x))
-  //.then(_ => ({ title: 'Test', description: 'Description' }))
+    .then(path(['data', 'transactions', 'edges', '0']))
+    .then(({node}) => {
+      const tags = node.tags.reduce((a, v) => assoc(v.name, v.value, a), {})
+      return ({
+        title: tags.Title,
+        description: tags.Description,
+        type: tags.Type,
+        topics: pluck('value', filter((t) => t.name.includes("Topic:"), node.tags)),
+        owner: tags.Creator || node.address,
+        timestamp: node.timestamp || null
+      })
+    })
+    
+  
 }
 
 function query(id) {

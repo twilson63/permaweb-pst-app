@@ -275,7 +275,7 @@
 </script>
 
 <svelte:head>
-  <title>pst</title>
+  <title>Atomic Asset Creator</title>
   <meta property="og:image" content="{location.origin}/{id}" />
   <meta property="og:url" content="{location.origin}/#/show/{id}" />
 </svelte:head>
@@ -331,7 +331,7 @@
         <div class="w-[325px] md:w-1/2 px-0 mx-0 md:ml-8">
           <div class="mb-4 px-0 mx-0 flex items-start justify-between">
             <h1 class="text-3xl">{asset.title}</h1>
-            <div>
+            <div class="flex space-x-2">
               <a
                 target="_blank"
                 href={tweetLink(asset.title, id)}

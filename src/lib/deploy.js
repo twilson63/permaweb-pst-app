@@ -12,6 +12,7 @@ const arweave = Arweave.init({
 });
 
 const SRC = __ASSET_SOURCE__;
+const UDL = "yRj4a5KMctX_uOmKWCFJIjmY8DeJcusVk6-HzLiM_t8";
 
 const warp = WarpFactory.forMainnet().use(new DeployPlugin());
 
@@ -42,6 +43,7 @@ export async function deploy(bundlr, asset) {
 
   let _tags = [
     { name: "Content-Type", value: asset.file.type },
+    { name: "License", value: UDL},
     { name: "App-Name", value: "SmartWeaveContract" },
     { name: "App-Version", value: "0.3.0" },
     { name: "Contract-Src", value: SRC },
@@ -67,6 +69,15 @@ export async function deploy(bundlr, asset) {
     { name: "Thumbnail", value: asset.thumbnail },
     ...topicData,
   ];
+  if (asset.license === 'derivative') {
+    _tags = append({name: 'Derivation', value: 'Allowed-With-Credit'})
+  }
+  if (asset.license === 'commercial') {
+    _tags = _tags.concat([
+      {name: 'Commercial-Use', value: 'Allowed'},
+      {name: 'License-Fee', value: 'One-Time-' + asset.payment}
+    ])
+  }
   if (asset.audioRenderer) {
     _tags = append(
       {

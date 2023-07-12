@@ -52,11 +52,15 @@
           </li>
         {/if}
       </ul>
-      <a href="/" class="btn btn-ghost normal-case text-xl md:hidden">pst</a>
+      <a href="/" class="btn btn-ghost normal-case text-sm md:hidden"
+        >Atomic Asset Creator</a
+      >
     </div>
   </div>
   <div class="hidden navbar-center md:flex">
-    <a href="/" class="btn btn-ghost normal-case text-xl">pst</a>
+    <a href="/" class="btn btn-ghost normal-case text-xl"
+      >Atomic Asset Creator</a
+    >
   </div>
   <div class="hidden navbar-end md:flex">
     {#if $profile}

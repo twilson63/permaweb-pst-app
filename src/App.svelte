@@ -18,14 +18,10 @@
 <Announcer />
 <Transition>
   <Route path="/">
-    <Start />
+    <Home />
   </Route>
   <Route path="/home">
-    {#if $profile}
-      <Home />
-    {:else}
-      <Start />
-    {/if}
+    <Home />
   </Route>
   <Route path="/about">
     <About />
