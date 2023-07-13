@@ -75,6 +75,10 @@
     }
 
     if (window.arweaveWallet) {
+      await window.arweaveWallet.connect(
+        ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
+        { name: "Atomic Asset Creator" }
+      );
       address = await window.arweaveWallet.getActiveAddress();
       if (!address) {
         await wallet.connect();

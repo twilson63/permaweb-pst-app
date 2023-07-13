@@ -12,10 +12,15 @@
   import ErrorDialog from "../dialogs/error.svelte";
   import ConfirmDialog from "../dialogs/confirm.svelte";
   import Navbar from "../components/navbar.svelte";
+  import ConnectModal from "../dialogs/connect.svelte";
+  import WalletHelp from "../dialogs/wallet-help.svelte";
 
   //import { WebBundlr } from "@bundlr-network/client";
   const WebBundlr = Bundlr.default;
 
+  let showConnect = false;
+  let showHelp = false;
+  let connected = false;
   let files = [];
   let title = "";
   let description = "";
@@ -53,7 +58,8 @@
         });
         wallet.setUrl("arweave.app");
         await wallet.connect();
-        const addr = await window.arweaveWallet.getActiveAddress();
+        const addr = wallet.address;
+        console.log("address", addr);
         $profile = { addr };
       }
     } catch (e) {
@@ -187,6 +193,8 @@
         deployDlg = true;
         const result = await deployAr(asset);
 
+        await new Promise((r) => setTimeout(r, 30 * 1000));
+
         e.target.reset();
 
         tx = result.id;
@@ -213,7 +221,7 @@
   );
 </script>
 
-<Navbar />
+<Navbar on:connect={() => (showConnect = true)} />
 <main>
   <section class="hero min-h-screen bg-base-100 items-start">
     <div class="flex flex-col items-center justify-start">
@@ -345,13 +353,13 @@
                 >License <Infotip tip={licenseTip} /></label
               >
               <select class="select select-bordered" bind:value={license}>
-                <option value="default">Default Public Use License</option>
+                <option value="default">UDL Default Public Use</option>
 
                 <option value="commercial"
-                  >Commercial Use - One Time Payment</option
+                  >UDL Commercial Use - One Time Payment</option
                 >
                 <option value="derivative"
-                  >Derivative Works - Allow with Credit</option
+                  >UDL Derivative Works - Allow with Credit</option
                 >
                 <!--
                 <option value="advanced">Advanced License</option>
@@ -426,3 +434,9 @@
   on:cancel={() => (errorDlg = false)}
 />
 <ConfirmDialog {tx} open={confirmDlg} on:cancel={() => (confirmDlg = false)} />
+<ConnectModal
+  bind:open={showConnect}
+  on:connected={connected}
+  on:help={() => (showHelp = true)}
+/>
+<WalletHelp bind:open={showHelp} />
