@@ -43,6 +43,7 @@ export async function deploy(bundlr, asset) {
 
   let _tags = [
     { name: "Content-Type", value: asset.file.type },
+    { name: 'Indexed-By', value: 'ucm' },
     { name: "License", value: UDL },
     { name: "App-Name", value: "SmartWeaveContract" },
     { name: "App-Version", value: "0.3.0" },
@@ -106,7 +107,8 @@ export async function deployAr(asset) {
   tx.addTag("App-Name", "SmartWeaveContract");
   tx.addTag("App-Version", "0.3.0");
   tx.addTag("Content-Type", asset.file.type);
-  tx.addTag('License', UDL)
+  tx.addTag('Indexed-By', 'ucm');
+  tx.addTag('License', UDL);
   tx.addTag("Contract-Src", SRC);
   tx.addTag(
     "Init-State",
