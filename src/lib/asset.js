@@ -350,20 +350,20 @@ function fetchFromBundlr(id) {
       }
     }`})
   })
-  .then((res) => res.json())
-  .then(path(['data', 'transactions', 'edges', '0']))
-  .then(({ node }) => {
-    const tags = node.tags.reduce((a, v) => assoc(v.name, v.value, a), {})
-    return ({
-      title: tags.Title,
-      description: tags.Description,
-      type: tags.Type,
-      topics: pluck('value', filter((t) => t.name.includes("Topic:"), node.tags)),
-      owner: tags.Creator || node.address,
-      timestamp: node.timestamp || null
+    .then((res) => res.json())
+    .then(path(['data', 'transactions', 'edges', '0']))
+    .then(({ node }) => {
+      const tags = node.tags.reduce((a, v) => assoc(v.name, v.value, a), {})
+      return ({
+        title: tags.Title,
+        description: tags.Description,
+        type: tags.Type,
+        topics: pluck('value', filter((t) => t.name.includes("Topic:"), node.tags)),
+        owner: tags.Creator || node.address,
+        timestamp: node.timestamp || null
+      })
     })
-  })
-  .catch(e => null)
+    .catch(e => null)
 }
 
 function fetchFromArweave(id) {
@@ -391,27 +391,27 @@ function fetchFromArweave(id) {
       }
     }`})
   })
-  .then((res) => res.json())
-  .then(path(['data', 'transactions', 'edges', '0']))
-  .then(({ node }) => {
-    const tags = node.tags.reduce((a, v) => assoc(v.name, v.value, a), {})
-    return ({
-      title: tags.Title,
-      description: tags.Description,
-      type: tags.Type,
-      topics: pluck('value', filter((t) => t.name.includes("Topic:"), node.tags)),
-      owner: tags.Creator || node.address,
-      timestamp: node.timestamp || Date.now()
+    .then((res) => res.json())
+    .then(path(['data', 'transactions', 'edges', '0']))
+    .then(({ node }) => {
+      const tags = node.tags.reduce((a, v) => assoc(v.name, v.value, a), {})
+      return ({
+        title: tags.Title,
+        description: tags.Description,
+        type: tags.Type,
+        topics: pluck('value', filter((t) => t.name.includes("Topic:"), node.tags)),
+        owner: tags.Creator || node.address,
+        timestamp: node.block.timestamp || Date.now()
+      })
     })
-  })
-  .catch(e => null)
+    .catch(e => null)
 }
 
 export async function getAssetData(id) {
   // if not found try to get for arweave.net/tx and it may be pending
   // so show loading dialog, until pending is resolved --tnw
   return Promise.all([fetchFromBundlr(id), fetchFromArweave(id)])
-    .then(res => ( console.log('results', res), res))
+    .then(res => (console.log('results', res), res))
     .then(res => res[0] ? res[0] : res[1])
     .then(res => (console.log(res), res))
 }
