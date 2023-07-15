@@ -413,7 +413,6 @@ export async function getAssetData(id) {
   return Promise.all([fetchFromBundlr(id), fetchFromArweave(id)])
     .then(res => (console.log('results', res), res))
     .then(res => res[0] ? res[0] : res[1])
-    .then(res => (console.log(res), res))
 }
 
 function query(id) {

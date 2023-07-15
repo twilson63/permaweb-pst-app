@@ -218,6 +218,9 @@
           } else {
             await new Promise((r) => setTimeout(r, 15 * 1000));
           }
+          if (loopCount > 100) {
+            throw new Error("Could not find Asset, you may want to try again!");
+          }
           loopCount++;
         }
 
