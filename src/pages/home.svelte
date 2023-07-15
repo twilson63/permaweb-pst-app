@@ -14,6 +14,7 @@
   import Navbar from "../components/navbar.svelte";
   import ConnectModal from "../dialogs/connect.svelte";
   import WalletHelp from "../dialogs/wallet-help.svelte";
+  import { getAssetData } from "../lib/asset.js";
 
   //import { WebBundlr } from "@bundlr-network/client";
   const WebBundlr = Bundlr.default;
@@ -33,6 +34,7 @@
   let currency = "";
   let forkTX = "";
   let audioRenderer = false;
+  let renderWith = "";
   let thumbnail = "";
   let sellChecked = false;
   let licenseTip = `choose a license for your atomic asset
@@ -83,6 +85,7 @@
       thumbnail,
       licenseType: license,
       payment: payment,
+      renderWith,
     };
 
     if (currency === "matic") {
@@ -193,7 +196,7 @@
         deployDlg = true;
         const result = await deployAr(asset);
 
-        await new Promise((r) => setTimeout(r, 30 * 1000));
+        //await new Promise((r) => setTimeout(r, 30 * 1000));
 
         e.target.reset();
 
@@ -204,6 +207,20 @@
         ];
         tx = result.id;
         files = [];
+
+        // check and see if it is available on graphql
+        let found = false;
+        let loopCount = 0;
+        while (!found) {
+          const result = await getAssetData(tx);
+          if (result) {
+            found = true;
+          } else {
+            await new Promise((r) => setTimeout(r, 15 * 1000));
+          }
+          loopCount++;
+        }
+
         deployDlg = false;
         confirmDlg = true;
       } catch (e) {
@@ -353,6 +370,7 @@
                 >License <Infotip tip={licenseTip} /></label
               >
               <select class="select select-bordered" bind:value={license}>
+                <option value="default">Choose License</option>
                 <option value="default">UDL Default Public Use</option>
 
                 <option value="commercial"
@@ -418,6 +436,19 @@
                 </label>
               </div>
             {/if}
+            <div class="form-control">
+              <label for="renderWith" class="label"
+                >Render With <Infotip
+                  tip={"A Renderer is a presentation control for your Atomic Asset"}
+                /></label
+              >
+              <input
+                id="renderWith"
+                class="input input-bordered"
+                placeholder="TX ID or ArNS Name for renderer "
+                bind:value={renderWith}
+              />
+            </div>
             <div class="my-8 space-y-4">
               <button disabled={notValid} class="btn btn-block">Deploy</button>
             </div>

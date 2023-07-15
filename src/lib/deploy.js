@@ -47,6 +47,7 @@ export async function deploy(bundlr, asset) {
     { name: "License", value: UDL },
     { name: "App-Name", value: "SmartWeaveContract" },
     { name: "App-Version", value: "0.3.0" },
+    { name: "Contract-Manifest", value: '{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}'},
     { name: "Contract-Src", value: SRC },
     {
       name: "Init-State",
@@ -89,6 +90,11 @@ export async function deploy(bundlr, asset) {
       },
       _tags
     );
+  } else if (asset.renderWith) {
+    _tags = append({
+      name: "Render-With",
+      value: asset.renderWith
+    }, _tags)
   }
   const dataStream = fileReaderStream(asset.file);
   const result = await bundlr.upload(dataStream, {
@@ -109,6 +115,7 @@ export async function deployAr(asset) {
   tx.addTag("Content-Type", asset.file.type);
   tx.addTag('Indexed-By', 'ucm');
   tx.addTag('License', UDL);
+  tx.addTag('Contract-Manifest', '{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}')
   tx.addTag("Contract-Src", SRC);
   tx.addTag(
     "Init-State",
@@ -152,6 +159,8 @@ export async function deployAr(asset) {
   }
   if (asset.audioRenderer) {
     tx.addTag("Render-With", "f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc");
+  } else if (asset.renderWith) {
+    tx.addTag("Render-With", asset.renderWith)
   }
 
   await arweave.transactions.sign(tx);

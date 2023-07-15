@@ -37,6 +37,7 @@
   import { router } from "tinro";
   import { getPromo } from "../lib/promos.js";
   import SuccessDlg from "../dialogs/success.svelte";
+  import Loading from "../dialogs/loading.svelte";
 
   const U = __BAR_CONTRACT__;
   const wallet = new ArweaveWebWallet();
@@ -59,6 +60,7 @@
   let showSell = false;
   let showProcessing = false;
   let showSuccess = false;
+  let showLoading = false;
 
   let address = "";
   onMount(async () => {
@@ -165,6 +167,7 @@
   let tradeData = {};
 
   async function getData(id) {
+    showLoading = true;
     if (globalThis.arweaveWallet) {
       address = await arweaveWallet.getActiveAddress();
     }
@@ -198,7 +201,7 @@
       percent: 100,
     };
 
-    console.log("source", assetData.src);
+    showLoading = false;
     return assetData;
   }
 
@@ -285,7 +288,9 @@
 </svelte:head>
 
 <Navbar on:connect={() => (showConnect = true)} />
-{#await getData(id) then asset}
+{#await getData(id)}
+  <Loading bind:open={showLoading} />
+{:then asset}
   <main>
     <section class="hero min-h-screen bg-base-100">
       <div
