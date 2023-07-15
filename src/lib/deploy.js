@@ -54,7 +54,7 @@ export async function deploy(bundlr, asset) {
       value: JSON.stringify({
         creator: addr,
         claimable: [],
-        ticker: "AA",
+        ticker: "ATOMIC",
         name: asset.title,
         balances: {
           [addr]: 100,
@@ -123,7 +123,7 @@ export async function deployAr(asset) {
       title: asset.title,
       description: asset.description,
       creator: addr,
-      ticker: "AA",
+      ticker: "ATOMIC",
       name: asset.title,
       balances: {
         [addr]: 100,
