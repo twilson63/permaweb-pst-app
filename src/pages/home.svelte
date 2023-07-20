@@ -375,19 +375,19 @@
               <select class="select select-bordered" bind:value={license}>
                 <option value="default">Choose License</option>
                 <option value="default">UDL Default Public Use</option>
-
+                <option value="access">UDL Restricted Access</option>
                 <option value="commercial"
                   >UDL Commercial Use - One Time Payment</option
                 >
                 <option value="derivative"
-                  >UDL Derivative Works - Allow with Credit</option
+                  >UDL Derivative Works - One Time Payment</option
                 >
                 <!--
                 <option value="advanced">Advanced License</option>
                 -->
               </select>
             </div>
-            {#if license === "commercial"}
+            {#if ["access", "commercial", "derivative"].includes(license)}
               <div class="form-control">
                 <label for="payment" class="label">Payment</label>
                 <input

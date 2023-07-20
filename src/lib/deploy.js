@@ -45,9 +45,10 @@ export async function deploy(bundlr, asset) {
     { name: "Content-Type", value: asset.file.type },
     { name: 'Indexed-By', value: 'ucm' },
     { name: "License", value: UDL },
+    { name: "Payment-Mode", value: "Global-Distribution" },
     { name: "App-Name", value: "SmartWeaveContract" },
     { name: "App-Version", value: "0.3.0" },
-    { name: "Contract-Manifest", value: '{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}'},
+    { name: "Contract-Manifest", value: '{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}' },
     { name: "Contract-Src", value: SRC },
     {
       name: "Init-State",
@@ -73,13 +74,22 @@ export async function deploy(bundlr, asset) {
     { name: "Thumbnail", value: asset.thumbnail },
     ...topicData,
   ];
-  if (asset.license === 'derivative') {
-    _tags = append({ name: 'Derivation', value: 'Allowed-With-Credit' })
+  if (asset.licenseType === 'access') {
+    _tags = _tags.concat([
+      { name: 'Access', value: 'Restricted' },
+      { name: 'Access-Fee', value: 'One-Time-' + asset.payment }
+    ])
   }
-  if (asset.license === 'commercial') {
+  if (asset.licenseType === 'derivative') {
+    _tags = _tags.concat([
+      { name: 'Derivation', value: 'Allowed-with-license-fee' },
+      { name: 'Derivation-Fee', value: 'One-Time-' + asset.payment }
+    ])
+  }
+  if (asset.licenseType === 'commercial') {
     _tags = _tags.concat([
       { name: 'Commercial-Use', value: 'Allowed' },
-      { name: 'License-Fee', value: 'One-Time-' + asset.payment }
+      { name: 'Commercial-Fee', value: 'One-Time-' + asset.payment }
     ])
   }
   if (asset.audioRenderer) {
@@ -115,6 +125,7 @@ export async function deployAr(asset) {
   tx.addTag("Content-Type", asset.file.type);
   tx.addTag('Indexed-By', 'ucm');
   tx.addTag('License', UDL);
+  tx.addTag('Payment-Mode', 'Global-Distribution')
   tx.addTag('Contract-Manifest', '{"evaluationOptions":{"sourceType":"redstone-sequencer","allowBigInt":true,"internalWrites":true,"unsafeClient":"skip","useConstructor":true}}')
   tx.addTag("Contract-Src", SRC);
   tx.addTag(
@@ -149,13 +160,23 @@ export async function deployAr(asset) {
   map(trim, split(",", asset.topics)).forEach((t) => {
     tx.addTag("Topic:" + t, t);
   });
-
-  if (asset.license === 'derivative') {
-    tx.addTag('Derivation', 'Allowed-With-Credit')
+  if (asset.licenseType === 'access') {
+    [
+      { name: 'Access', value: 'Restricted' },
+      { name: 'Access-Fee', value: 'One-Time-' + asset.payment }
+    ].map(t => tx.addTag(t.name, t.value))
   }
-  if (asset.license === 'commercial') {
-    tx.addTag('Commercial-Use', 'Allowed')
-    tx.addTag('License-Fee', 'One-Time-', + asset.payment)
+  if (asset.licenseType === 'derivative') {
+    [
+      { name: 'Derivation', value: 'Allowed-with-license-fee' },
+      { name: 'Derivation-Fee', value: 'One-Time-' + asset.payment }
+    ].map(t => tx.addTag(t.name, t.value))
+  }
+  if (asset.licenseType === 'commercial') {
+    [
+      { name: 'Commercial-Use', value: 'Allowed' },
+      { name: 'Commercial-Fee', value: 'One-Time-' + asset.payment }
+    ].map(t => t.addTag(t.name, t.value))
   }
   if (asset.audioRenderer) {
     tx.addTag("Render-With", "f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc");
