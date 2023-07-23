@@ -16,7 +16,7 @@
   import ErrorDialog from "../dialogs/error.svelte";
   import Loading from "../dialogs/loading.svelte";
   import stampSvg from "../assets/stamp.svg";
-  import { getPromo } from '../lib/promos.js'
+  import { getPromo } from "../lib/promos.js";
 
   import { profile } from "../store.js";
   import { reject, concat, sortWith, descend, prop, takeLast } from "ramda";
@@ -36,8 +36,10 @@
   let showError = false;
   let showLoading = false;
   let errorMessage = "An Error Occuried!";
-  let server = import.meta.env.DEV ? 'https://arweave.net' : `https://${takeLast(2, globalThis.location.host.split('.')).join('.')}`
-  
+  let server = import.meta.env.DEV
+    ? "https://arweave.net"
+    : `https://${takeLast(2, globalThis.location.host.split(".")).join(".")}`;
+
   function handleCopy(id) {
     items[id] = false;
     return () => {
@@ -47,7 +49,6 @@
     };
   }
 
-  
   function tweetLink(title, id) {
     return `https://twitter.com/intent/tweet?text=${encodeURI(
       getPromo() + "\n\n" + title.replace("#", "no ") + "\n\n🐘"
@@ -96,7 +97,7 @@
   async function getImages(addr) {
     try {
       showLoading = true;
-      const results = await pstsByOwner(addr)
+      const results = await pstsByOwner(addr);
       showLoading = false;
       return results;
     } catch (e) {
@@ -199,8 +200,6 @@
             <th>Title</th>
             <th>Stamps</th>
             <th>Transaction ID</th>
-            <th>Ownership</th>
-            <th>Creator</th>
             <th>Share</th>
             <th>View</th>
             <th>Transfer</th>
@@ -261,36 +260,6 @@
                   {/if}
                 </p>
               </td>
-              {#await assetDetails(img.id, addr)}
-                <td>
-                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
-                  <p class="text-[18px] font-light">100%</p>
-                </td>
-                <td>
-                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
-                  <p class="text-[18px] font-light">...</p>
-                </td>
-              {:then details}
-                <td>
-                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
-                  <p class="text-[18px] font-light">{details.percent} %</p>
-                </td>
-                <td>
-                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
-                  <p class="text-[18px] font-light">
-                    {details.handle}
-                  </p>
-                </td>
-              {:catch error}
-                <td>
-                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
-                  <p class="text-[18px] font-light">0 %</p>
-                </td>
-                <td>
-                  <h3 class="text-[18px] font-bold">&nbsp;</h3>
-                  <p class="text-[18px] font-light">@unknown</p>
-                </td>
-              {/await}
               <td>
                 <h3 class="text-[18px] font-bold">&nbsp;</h3>
                 <p class="text-[18px] font-light flex justify-center">

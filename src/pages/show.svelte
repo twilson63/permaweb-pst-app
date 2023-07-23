@@ -426,7 +426,7 @@
               <div>
                 <div class="mb-2 uppercase">Created</div>
                 <div>
-                  {format(fromUnixTime(asset.timestamp), "MMMM d, yyyy")}
+                  {format(asset.timestamp, "MMMM d, yyyy")}
                 </div>
               </div>
             </div>
