@@ -176,7 +176,7 @@ export async function deployAr(asset) {
     [
       { name: 'Commercial-Use', value: 'Allowed' },
       { name: 'Commercial-Fee', value: 'One-Time-' + asset.payment }
-    ].map(t => t.addTag(t.name, t.value))
+    ].map(t => tx.addTag(t.name, t.value))
   }
   if (asset.audioRenderer) {
     tx.addTag("Render-With", "f6I-Do04BO2pJysbiYIFjq4NkmjT5iYYWfF6cO-N4mc");
