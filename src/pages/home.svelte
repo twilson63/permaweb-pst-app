@@ -299,7 +299,7 @@
                   type="file"
                   class="hidden input input-bordered"
                   bind:files
-                  accept="image/png, image/jpeg, image/gif, image/jpg, image/webp, image/svg+xml, application/pdf, audio/basic, audio/mp4, audio/mpeg, audio/ogg, video/avi, video/mpeg, video/mp4, video/ogg, video/quicktime"
+                  accept="audio/x-wav, image/png, image/jpeg, image/gif, image/jpg, image/webp, image/svg+xml, application/pdf, audio/basic, audio/mp4, audio/mpeg, audio/ogg, video/avi, video/mpeg, video/mp4, video/ogg, video/quicktime, audio/x-flac"
                   required
                 />
                 <p
