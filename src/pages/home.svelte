@@ -48,6 +48,7 @@
     try {
       await new Promise((r) => setTimeout(r, 500));
       if (window.arweaveWallet) {
+        await window.arweaveWallet.disconnect();
         await window.arweaveWallet.connect(
           ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
           { name: "Atomic Asset Creator" }
