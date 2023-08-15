@@ -48,11 +48,13 @@
     try {
       await new Promise((r) => setTimeout(r, 500));
       if (window.arweaveWallet) {
-        await window.arweaveWallet.disconnect();
-        await window.arweaveWallet.connect(
-          ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
-          { name: "Atomic Asset Creator" }
-        );
+        const permissions = await window.arweaveWallet.getPermissions();
+        if (!permissions) {
+          await window.arweaveWallet.connect(
+            ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
+            { name: "Atomic Asset Creator" }
+          );
+        }
         const addr = await window.arweaveWallet.getActiveAddress();
         $profile = { addr };
       } else {

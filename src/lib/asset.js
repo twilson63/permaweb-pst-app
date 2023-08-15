@@ -38,7 +38,7 @@ const account = new Account({
   cacheTime: 60,
 });
 const warp = WarpFactory.forMainnet();
-const DRE = "https://dre-1.warp.cc";
+const DRE = "https://dre-u.warp.cc";
 
 export async function listAssets(count) {
   return (
@@ -272,7 +272,7 @@ query {
 }
 
 export function pstsByOwner(addr) {
-  return fetch(`https://contracts.warp.cc/balances?walletAddress=${addr}`)
+  return fetch(`https://contracts-u.warp.cc/balances?walletAddress=${addr}`)
     .then((res) => res.json())
     .then((result) => pluck("contract_tx_id", result.balances))
     .then(buildQuery)

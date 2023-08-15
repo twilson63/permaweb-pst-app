@@ -1,4 +1,6 @@
-import { WarpFactory, defaultCacheOptions } from "warp-contracts/web";
+import { WarpFactory, defaultCacheOptions } from "warp-contracts";
+import { InjectedArweaveSigner } from 'warp-contracts-plugin-signature'
+import { ArweaveWebWallet } from 'arweave-wallet-connector'
 import {
   add,
   compose,
@@ -26,20 +28,40 @@ const arweave = Arweave.init({
 
 
 const warp = WarpFactory.forMainnet({ ...defaultCacheOptions, inMemory: true });
-const DRE = "https://dre-1.warp.cc";
-const stamps = Stamps.init({ warp, arweave });
-
+const DRE = 'https://dre-u.warp.cc/contract'
 const STAMPCOIN = __STAMP_CONTRACT__;
 let data = null;
 
-const stampCount = (asset) => stamps.count(asset).then((r) => r.total);
+const stampCount = (asset) => {
+  const stamps = Stamps.init({ warp, arweave, wallet: getSigner(), DRE });
+  return stamps.count(asset).then((r) => r.total);
+}
 
 export async function stamp(transactionId) {
-  return stamps
-    .stamp(transactionId)
+  const userSigner = getSigner()
+  const stamps = Stamps.init({ warp, arweave, wallet: userSigner, dre: DRE });
+  return stamps.stamp(transactionId)
     .then((r) => new Promise((resolve) => setTimeout(() => resolve(r), 500)));
 }
 
 export async function getCount(asset) {
   return stampCount(asset);
+}
+
+async function getSigner() {
+  let userSigner = null
+  if (globalThis.arweaveWallet) {
+    userSigner = new InjectedArweaveSigner(globalThis.arweaveWallet);
+  } else {
+    const wallet = new ArweaveWebWallet({
+      name: "foo",
+    });
+    wallet.setUrl("arweave.app");
+    await wallet.connect();
+    userSigner = new InjectedArweaveSigner(wallet);
+  }
+
+  userSigner.getAddress = globalThis.arweaveWallet.getActiveAddress;
+  await userSigner.setPublicKey();
+  return userSigner
 }

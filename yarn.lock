@@ -507,7 +507,7 @@
   dependencies:
     "@ethersproject/logger" "^5.7.0"
 
-"@ethersproject/providers@5.7.2":
+"@ethersproject/providers@5.7.2", "@ethersproject/providers@^5.7.2":
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.7.2.tgz#f8b1a4f275d7ce58cf0a2eec222269a08beb18cb"
   integrity sha512-g34EWZ1WWAVgr4aptGlVBF8mhl3VWjv+8hoAnzStu8Ah22VHBsuGzP17eb6xDVRzw895G4W7vvx60lFFur/1Rg==
@@ -615,7 +615,7 @@
     "@ethersproject/constants" "^5.7.0"
     "@ethersproject/logger" "^5.7.0"
 
-"@ethersproject/wallet@5.7.0":
+"@ethersproject/wallet@5.7.0", "@ethersproject/wallet@^5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/wallet/-/wallet-5.7.0.tgz#4e5d0790d96fe21d61d38fb40324e6c7ef350b2d"
   integrity sha512-MhmXlJXEJFBFVKrDLB4ZdDzxcBxQ3rLyCkhNqVu3CDYvR97E+8r01UgrI+TI99Le+aYm/in/0vp86guJuM7FCA==
@@ -831,10 +831,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@permaweb/stampjs@^0.2.9":
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/@permaweb/stampjs/-/stampjs-0.2.9.tgz#d0cf8e1295869d1cdadf3f71dc9c20d20ff96ebd"
-  integrity sha512-/jT57reh6ohOXiP9xPznR7S/LmW8KdaK/+J5EFED7rDHXOgCSx2yG4mgTGALZ0iag5HO92Z4Zx0JrUMfCnoSAQ==
+"@permaweb/stampjs@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@permaweb/stampjs/-/stampjs-0.5.2.tgz#1d27ae52ecf7e14b9fe88c9899362603caa274fe"
+  integrity sha512-YbtxFwzxNZwc1wNmOuheY27JgngAWlaAsmjbea0r/SaofIlnKyJHD0jDJJDzletcn8T8k6j/ftRAI+3kqClmCg==
   dependencies:
     ar-gql "^1.2.1"
     ramda "^0.29.0"
@@ -1687,6 +1687,30 @@ arbundles@^0.7.3:
     secp256k1 "^4.0.2"
     tmp-promise "^3.0.2"
 
+arbundles@^0.9.8:
+  version "0.9.8"
+  resolved "https://registry.yarnpkg.com/arbundles/-/arbundles-0.9.8.tgz#d02e1151aa1cac75e33058a67f65a627e6a669c5"
+  integrity sha512-UevirqeqzCSLPlgyxvn7vvuRm22+wAK+HXCYGnE1HTytgfAu8so/g41wkUziNzoeeTNmodJpEy6RbRfYOaRsTA==
+  dependencies:
+    "@ethersproject/bytes" "^5.7.0"
+    "@ethersproject/hash" "^5.7.0"
+    "@ethersproject/providers" "^5.7.2"
+    "@ethersproject/signing-key" "^5.7.0"
+    "@ethersproject/transactions" "^5.7.0"
+    "@ethersproject/wallet" "^5.7.0"
+    "@noble/ed25519" "^1.6.1"
+    arweave "=1.11.8"
+    base64url "^3.0.1"
+    bs58 "^4.0.1"
+    keccak "^3.0.2"
+    secp256k1 "^4.0.2"
+  optionalDependencies:
+    "@randlabs/myalgo-connect" "^1.1.2"
+    algosdk "^1.13.1"
+    arweave-stream-tx "^1.1.0"
+    multistream "^4.1.0"
+    tmp-promise "^3.0.2"
+
 archiver-utils@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/archiver-utils/-/archiver-utils-2.1.0.tgz#e8a460e94b693c3e3da182a098ca6285ba9249e2"
@@ -1921,6 +1945,16 @@ arweave@^1.10.23:
     base64-js "^1.5.1"
     bignumber.js "^9.0.2"
     util "^0.12.4"
+
+arweave@^1.13.1, arweave@^1.13.7:
+  version "1.14.4"
+  resolved "https://registry.yarnpkg.com/arweave/-/arweave-1.14.4.tgz#5ba22136aa0e7fd9495258a3931fb770c9d6bf21"
+  integrity sha512-tmqU9fug8XAmFETYwgUhLaD3WKav5DaM4p1vgJpEj/Px2ORPPMikwnSySlFymmL2qgRh2ZBcZsg11+RXPPGLsA==
+  dependencies:
+    arconnect "^0.4.2"
+    asn1.js "^5.4.1"
+    base64-js "^1.5.1"
+    bignumber.js "^9.0.2"
 
 asn1.js@5.4.1, asn1.js@^5.2.0, asn1.js@^5.4.1:
   version "5.4.1"
@@ -2441,6 +2475,13 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha512-HpGFw18DgFWlncDfjTa2rcQ4W88O1mC8e8yZ2AvQY5KDaktSTwo+KRf6nHK6FRI5FyRyb/5T6+TSxfP7QyGsmQ==
+
+busboy@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/busboy/-/busboy-1.6.0.tgz#966ea36a9502e43cdb9146962523b92f531f6893"
+  integrity sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==
+  dependencies:
+    streamsearch "^1.1.0"
 
 bytes@3.1.2, bytes@^3.1.0, bytes@^3.1.2:
   version "3.1.2"
@@ -6822,6 +6863,11 @@ streaming-json-stringify@3:
     json-stringify-safe "5"
     readable-stream "2"
 
+streamsearch@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/streamsearch/-/streamsearch-1.1.0.tgz#404dd1e2247ca94af554e841a8ef0eaa238da764"
+  integrity sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==
+
 string-argv@^0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/string-argv/-/string-argv-0.1.2.tgz#c5b7bc03fb2b11983ba3a72333dd0559e77e4738"
@@ -7204,6 +7250,13 @@ underscore@>=1.3.1:
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.13.4.tgz#7886b46bbdf07f768e0052f1828e1dcab40c0dee"
   integrity sha512-BQFnUDuAQ4Yf/cYY5LNrK9NCJFKriaRbD9uR1fTeXnBeoa97W0i41qkZfGO9pSo8I5KzjAcSY2XYtdf0oKd7KQ==
 
+undici@^5.19.1:
+  version "5.23.0"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.23.0.tgz#e7bdb0ed42cebe7b7aca87ced53e6eaafb8f8ca0"
+  integrity sha512-1D7w+fvRsqlQ9GscLBwcAJinqcZGHUKjbOmXdlE/v8BvEGXjeWAax+341q44EuTcHXXnfyKNbKRq4Lg7OzhMmg==
+  dependencies:
+    busboy "^1.6.0"
+
 undici@^5.8.0:
   version "5.8.1"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.8.1.tgz#511d43ff6be02f84ec2513ae7f4b07c589319272"
@@ -7383,6 +7436,16 @@ vm2@3.9.9:
     acorn "^8.7.0"
     acorn-walk "^8.2.0"
 
+warp-arbundles@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/warp-arbundles/-/warp-arbundles-1.0.4.tgz#10c0cd662ab41b0dabad9159c7110f43425cc5cc"
+  integrity sha512-KeRac/EJ7VOK+v5+PSMh2SrzpCKOAFnJICLlqZWt6qPkDCzVwcrNE5wFxOlEk5U170ewMDAB3e86UHUblevXpw==
+  dependencies:
+    arweave "^1.13.7"
+    base64url "^3.0.1"
+    buffer "^6.0.3"
+    warp-isomorphic "^1.0.7"
+
 warp-contracts-plugin-deploy@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/warp-contracts-plugin-deploy/-/warp-contracts-plugin-deploy-1.0.8.tgz#94e9841ea3f68d09e9c1bbd483efa84a2c541901"
@@ -7391,6 +7454,14 @@ warp-contracts-plugin-deploy@^1.0.8:
     arbundles "^0.7.3"
     arlocal "^1.1.59"
     node-stdlib-browser "^1.2.0"
+
+warp-contracts-plugin-signature@^1.0.16:
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/warp-contracts-plugin-signature/-/warp-contracts-plugin-signature-1.0.16.tgz#7ba9ad9651ae20e679e76daaffe6836686ebf00d"
+  integrity sha512-sYrL/bCj7iqjUk7nPSnNpdkcvRPA0yQlNqBN0iyUQ9GQuyskwLDEeQUfe+T1oDwHaznqqABqBtItB+3TsUULLw==
+  dependencies:
+    arbundles "^0.9.8"
+    arweave "^1.13.1"
 
 warp-contracts@^1.1.7:
   version "1.1.14"
@@ -7414,10 +7485,10 @@ warp-contracts@^1.1.7:
     unzipit "^1.4.0"
     vm2 "3.9.9"
 
-warp-contracts@^1.4.9:
-  version "1.4.9"
-  resolved "https://registry.yarnpkg.com/warp-contracts/-/warp-contracts-1.4.9.tgz#979d4c31bf314561fdf58a96f7855f51772ebbd0"
-  integrity sha512-TFENRj3lRt04T2AJ8Njw0tANzbutFDX1WJzb6B5UmQGn5UyFztVo1PAJboxV9jsidBmJS2he3AnrwABUoIwIKA==
+warp-contracts@^1.4.16:
+  version "1.4.16"
+  resolved "https://registry.yarnpkg.com/warp-contracts/-/warp-contracts-1.4.16.tgz#e21c7f664c1540efd4362c735507f1f6dc37fe92"
+  integrity sha512-LSCQOThN9jj5c3SERmXa9tgIvNo0miF+Bn/yVCtXwXLGlmEmjGl5PCpGngDE93Dr5bKnilXqmO16TFHnCJbuwg==
   dependencies:
     archiver "^5.3.0"
     arweave "1.13.7"
@@ -7430,7 +7501,8 @@ warp-contracts@^1.4.9:
     safe-stable-stringify "2.4.1"
     stream-buffers "^3.0.2"
     unzipit "^1.4.0"
-    warp-isomorphic "1.0.4"
+    warp-arbundles "^1.0.4"
+    warp-isomorphic "^1.0.7"
     warp-wasm-metering "1.0.1"
 
 warp-isomorphic@1.0.0:
@@ -7441,13 +7513,13 @@ warp-isomorphic@1.0.0:
     buffer "^6.0.3"
     undici "^5.8.0"
 
-warp-isomorphic@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/warp-isomorphic/-/warp-isomorphic-1.0.4.tgz#1017eba260e0f0228b33b94b9e36a1afe54e09d8"
-  integrity sha512-W77IoLjq/eu5bY1uRrlmVt5lLDoIHeZ0ozJ/j67FTnxvZRXu887biEnom1nx8q1UgOKyJh8eQYFQaE2FLlKhFg==
+warp-isomorphic@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/warp-isomorphic/-/warp-isomorphic-1.0.7.tgz#abf1ee7bce44bec7c6b97547859e614876869aa7"
+  integrity sha512-fXHbUXwdYqPm9fRPz8mjv5ndPco09aMQuTe4kXfymzOq8V6F3DLsg9cIafxvjms9/mc6eijzkLBJ63yjEENEjA==
   dependencies:
     buffer "^6.0.3"
-    undici "^5.8.0"
+    undici "^5.19.1"
 
 warp-wasm-json-toolkit@1.0.2:
   version "1.0.2"

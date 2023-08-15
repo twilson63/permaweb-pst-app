@@ -5,7 +5,7 @@ const account = new Account();
 
 const ANS = "HrPi8hFc7M5dbrtlELfTKwPr53RRrDBgXGdDkp0h-j4";
 const CACHE = "https://cache.permapages.app";
-const DRE = "https://dre-1.warp.cc";
+const DRE = "https://dre-u.warp.cc";
 
 export async function getProfile(addr) {
   const res = await account.get(addr);

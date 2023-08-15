@@ -8,41 +8,15 @@ const options = {
   internalWrites: true,
   unsafeClient: "skip",
   remoteStateSyncEnabled: true,
-  remoteStateSyncSource: 'https://dre-6.warp.cc'
+  remoteStateSyncSource: 'https://dre-u.warp.cc/contract'
 };
 
 export const readState = (id) =>
   warp
     .contract(id)
     .setEvaluationOptions(options)
-    .readState()
-    .catch((e) =>
-      warp
-        .contract(id)
-        .setEvaluationOptions({
-          ...options,
-          remoteStateSyncSource: "https://dre-5.warp.cc/contract",
-        })
-        .readState()
-    )
-    .catch((e) =>
-      warp
-        .contract(id)
-        .setEvaluationOptions({
-          ...options,
-          remoteStateSyncSource: "https://dre-6.warp.cc/contract",
-        })
-        .readState()
-    )
-    .catch((e) =>
-      warp
-        .contract(id)
-        .setEvaluationOptions({
-          ...options,
-          remoteStateSyncSource: "https://dre-2.warp.cc/contract",
-        })
-        .readState()
-    );
+    .readState();
+
 
 export function write(contract, input) {
   return warp

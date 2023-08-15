@@ -9,7 +9,7 @@ const arweave = Arweave.init({
   protocol: "https",
 });
 
-const DRE_NODE = "https://dre-1.warp.cc";
+const DRE_NODE = "https://dre-u.warp.cc";
 const BAR = __BAR_CONTRACT__;
 const SRC = __ASSET_SOURCE__;
 
