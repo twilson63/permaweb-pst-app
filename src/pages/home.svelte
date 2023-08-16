@@ -187,13 +187,15 @@
         errorDlg = true;
         return;
       }
-
-      // connnect
-      await arweaveWallet.connect([
-        "ACCESS_ADDRESS",
-        "SIGN_TRANSACTION",
-        "DISPATCH",
-      ]);
+      const permissions = await window.arweaveWallet.getPermissions();
+      if (!permissions) {
+        // connnect
+        await window.arweaveWallet.connect([
+          "ACCESS_ADDRESS",
+          "SIGN_TRANSACTION",
+          "DISPATCH",
+        ]);
+      }
 
       try {
         deployDlg = true;
