@@ -43,6 +43,7 @@
   Derivative Works - allow but users must credit source`;
   let license = "";
   let payment = "0.01";
+  let units = 1;
 
   onMount(async () => {
     try {
@@ -89,6 +90,7 @@
       licenseType: license,
       payment: payment,
       renderWith,
+      units,
     };
 
     if (currency === "matic") {
@@ -455,6 +457,20 @@
                 class="input input-bordered"
                 placeholder="TX ID or ArNS Name for renderer "
                 bind:value={renderWith}
+              />
+            </div>
+            <div class="form-control">
+              <label for="units" class="label"
+                >Content Tokens<Infotip
+                  tip={"Atomic Assets can be fractionalized, if you would like to offer more tokens than just 1 enter a number greater than 1"}
+                /></label
+              >
+              <input
+                id="units"
+                type="number"
+                class="input input-bordered"
+                placeholder="TX ID or ArNS Name for renderer "
+                bind:value={units}
               />
             </div>
             <div class="my-8 space-y-4">

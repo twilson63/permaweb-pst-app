@@ -58,7 +58,7 @@ export async function deploy(bundlr, asset) {
         ticker: "ATOMIC",
         name: asset.title,
         balances: {
-          [addr]: 100,
+          [addr]: asset.units,
         },
         emergencyHaltWallet: addr,
         contentType: asset.file.type,
@@ -137,7 +137,7 @@ export async function deployAr(asset) {
       ticker: "ATOMIC",
       name: asset.title,
       balances: {
-        [addr]: 100,
+        [addr]: asset.units,
       },
       contentType: asset.file.type,
       emergencyHaltWallet: addr,
