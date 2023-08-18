@@ -44,6 +44,7 @@
   let license = "";
   let payment = "0.01";
   let units = 1;
+  let fractionalize = false;
 
   onMount(async () => {
     try {
@@ -459,20 +460,32 @@
                 bind:value={renderWith}
               />
             </div>
-            <div class="form-control">
-              <label for="units" class="label"
-                >Content Tokens<Infotip
-                  tip={"Atomic Assets can be fractionalized, if you would like to offer more tokens than just 1 enter a number greater than 1"}
-                /></label
-              >
-              <input
-                id="units"
-                type="number"
-                class="input input-bordered"
-                placeholder="TX ID or ArNS Name for renderer "
-                bind:value={units}
-              />
+            <div class="form-control mt-4">
+              <label class="label">
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  bind:value={fractionalize}
+                />
+                Fractionalize
+              </label>
             </div>
+            {#if fractionalize}
+              <div class="form-control">
+                <label for="units" class="label"
+                  >Content Tokens<Infotip
+                    tip={"Atomic Assets can be fractionalized, if you would like to offer more tokens than just 1 enter a number greater than 1"}
+                  /></label
+                >
+                <input
+                  id="units"
+                  type="number"
+                  class="input input-bordered"
+                  placeholder="TX ID or ArNS Name for renderer "
+                  bind:value={units}
+                />
+              </div>
+            {/if}
             <div class="my-8 space-y-4">
               <button disabled={notValid} class="btn btn-block">Deploy</button>
             </div>
